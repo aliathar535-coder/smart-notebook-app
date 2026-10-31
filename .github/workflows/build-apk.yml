@@ -38,7 +38,7 @@ jobs:
 
       - name: Create Cordova Project & Build for Android 15
         run: |
-          cordova create myApp com.smart-notebook-app.app gadipro
+          cordova create myApp com.smartnotebookapp.app smart notebook app
           cd myApp
           cordova platform add android@13.0.0
           cp ../index.html www/index.html
