@@ -9,16 +9,64 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- html2pdf.js for PDF Generation -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #f0f4ff 0%, #ffe4e6 50%, #fef3c7 100%); min-height: 100vh; }
         .custom-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
+        #floatingCalculator { touch-action: none; position: fixed; bottom: 20px; right: 20px; z-index: 100; }
     </style>
 </head>
-<body class="p-3 sm:p-6 text-gray-800">
+<body class="p-3 sm:p-6 text-gray-800 relative">
+    
+    <!-- Draggable Floating Calculator Button & Modal -->
+    <div id="floatingCalculator">
+        <!-- Calculator Toggle Icon Button -->
+        <button onclick="toggleCalculator()" class="w-14 h-14 bg-gradient-to-tr from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white rounded-full shadow-2xl flex items-center justify-center text-2xl border-2 border-white cursor-pointer transition transform hover:scale-110">
+            <i class="fa-solid fa-calculator"></i>
+        </button>
+
+        <!-- Calculator Popup Box (Hidden by default) -->
+        <div id="calcModalBox" class="hidden absolute bottom-16 right-0 w-80 bg-gradient-to-br from-indigo-950 to-slate-900 text-white p-4 rounded-2xl custom-shadow border border-indigo-500/40 z-50">
+            <div class="flex justify-between items-center mb-2 cursor-move" id="calcHeaderHandle">
+                <span class="text-xs uppercase tracking-wider text-indigo-300 font-bold flex items-center gap-1">
+                    <i class="fa-solid fa-calculator text-amber-400"></i> मिनी कैलकुलेटर (Drag me)
+                </span>
+                <button onclick="toggleCalculator()" class="text-xs text-red-400 hover:text-red-300 font-bold px-1.5 py-0.5 bg-red-500/20 rounded"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="bg-black/50 p-3 rounded-xl mb-3 border border-white/10 text-right">
+                <div id="calcHistory" class="text-xs text-gray-400 h-5 overflow-x-auto whitespace-nowrap"></div>
+                <div id="calcDisplay" class="text-2xl font-bold text-amber-400 tracking-wider overflow-x-auto whitespace-nowrap">0</div>
+            </div>
+            <div class="grid grid-cols-4 gap-1.5">
+                <button onclick="appendCalc('C')" class="bg-red-500/80 hover:bg-red-600 p-2 rounded-xl font-bold text-sm transition">C</button>
+                <button onclick="appendCalc('⌫')" class="bg-amber-600/80 hover:bg-amber-700 p-2 rounded-xl font-bold text-sm transition"><i class="fa-solid fa-delete-left"></i></button>
+                <button onclick="appendCalc('/')" class="bg-indigo-600 hover:bg-indigo-700 p-2 rounded-xl font-bold text-sm transition">÷</button>
+                <button onclick="appendCalc('*')" class="bg-indigo-600 hover:bg-indigo-700 p-2 rounded-xl font-bold text-sm transition">×</button>
+                
+                <button onclick="appendCalc('7')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">7</button>
+                <button onclick="appendCalc('8')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">8</button>
+                <button onclick="appendCalc('9')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">9</button>
+                <button onclick="appendCalc('-')" class="bg-indigo-600 hover:bg-indigo-700 p-2 rounded-xl font-bold text-sm transition">-</button>
+                
+                <button onclick="appendCalc('4')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">4</button>
+                <button onclick="appendCalc('5')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">5</button>
+                <button onclick="appendCalc('6')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">6</button>
+                <button onclick="appendCalc('+')" class="bg-indigo-600 hover:bg-indigo-700 p-2 rounded-xl font-bold text-sm transition">+</button>
+                
+                <button onclick="appendCalc('1')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">1</button>
+                <button onclick="appendCalc('2')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">2</button>
+                <button onclick="appendCalc('3')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">3</button>
+                <button onclick="appendCalc('=')" class="row-span-2 bg-gradient-to-t from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 p-2 rounded-xl font-bold flex items-center justify-center text-sm transition">=</button>
+                
+                <button onclick="appendCalc('0')" class="col-span-2 bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">0</button>
+                <button onclick="appendCalc('.')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">.</button>
+            </div>
+        </div>
+    </div>
+
     <div class="max-w-2xl mx-auto space-y-6">
-        
         <!-- Header -->
         <header class="bg-gradient-to-r from-violet-600 via-pink-600 to-amber-500 p-5 rounded-2xl text-white custom-shadow flex justify-between items-center">
             <div>
@@ -31,44 +79,6 @@
                 <i class="fa-solid fa-gear"></i> रेट सेटिंग्स
             </button>
         </header>
-
-        <!-- Live Calculator Box -->
-        <div class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-4 rounded-2xl custom-shadow border border-indigo-500/30">
-            <div class="flex justify-between items-center mb-2">
-                <span class="text-xs uppercase tracking-wider text-indigo-300 font-bold flex items-center gap-1">
-                    <i class="fa-solid fa-calculator text-amber-400"></i> लाइव मिनी कैलकुलेटर
-                </span>
-                <button onclick="clearCalcHistory()" class="text-xs text-red-400 hover:text-red-300 underline">हिस्ट्री साफ़ करें</button>
-            </div>
-            <div class="bg-black/40 p-3 rounded-xl mb-3 border border-white/10 text-right">
-                <div id="calcHistory" class="text-xs text-gray-400 h-5 overflow-x-auto whitespace-nowrap"></div>
-                <div id="calcDisplay" class="text-2xl sm:text-3xl font-bold text-amber-400 tracking-wider overflow-x-auto whitespace-nowrap">0</div>
-            </div>
-            <div class="grid grid-cols-4 gap-2">
-                <button onclick="appendCalc('C')" class="bg-red-500/80 hover:bg-red-600 p-2.5 rounded-xl font-bold transition">C</button>
-                <button onclick="appendCalc('⌫')" class="bg-amber-600/80 hover:bg-amber-700 p-2.5 rounded-xl font-bold transition"><i class="fa-solid fa-delete-left"></i></button>
-                <button onclick="appendCalc('/')" class="bg-indigo-600 hover:bg-indigo-700 p-2.5 rounded-xl font-bold transition">÷</button>
-                <button onclick="appendCalc('*')" class="bg-indigo-600 hover:bg-indigo-700 p-2.5 rounded-xl font-bold transition">×</button>
-                
-                <button onclick="appendCalc('7')" class="bg-gray-800 hover:bg-gray-700 p-2.5 rounded-xl font-bold transition">7</button>
-                <button onclick="appendCalc('8')" class="bg-gray-800 hover:bg-gray-700 p-2.5 rounded-xl font-bold transition">8</button>
-                <button onclick="appendCalc('9')" class="bg-gray-800 hover:bg-gray-700 p-2.5 rounded-xl font-bold transition">9</button>
-                <button onclick="appendCalc('-')" class="bg-indigo-600 hover:bg-indigo-700 p-2.5 rounded-xl font-bold transition">-</button>
-                
-                <button onclick="appendCalc('4')" class="bg-gray-800 hover:bg-gray-700 p-2.5 rounded-xl font-bold transition">4</button>
-                <button onclick="appendCalc('5')" class="bg-gray-800 hover:bg-gray-700 p-2.5 rounded-xl font-bold transition">5</button>
-                <button onclick="appendCalc('6')" class="bg-gray-800 hover:bg-gray-700 p-2.5 rounded-xl font-bold transition">6</button>
-                <button onclick="appendCalc('+')" class="bg-indigo-600 hover:bg-indigo-700 p-2.5 rounded-xl font-bold transition">+</button>
-                
-                <button onclick="appendCalc('1')" class="bg-gray-800 hover:bg-gray-700 p-2.5 rounded-xl font-bold transition">1</button>
-                <button onclick="appendCalc('2')" class="bg-gray-800 hover:bg-gray-700 p-2.5 rounded-xl font-bold transition">2</button>
-                <button onclick="appendCalc('3')" class="bg-gray-800 hover:bg-gray-700 p-2.5 rounded-xl font-bold transition">3</button>
-                <button onclick="appendCalc('=')" class="row-span-2 bg-gradient-to-t from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 p-2.5 rounded-xl font-bold flex items-center justify-center transition">=</button>
-                
-                <button onclick="appendCalc('0')" class="col-span-2 bg-gray-800 hover:bg-gray-700 p-2.5 rounded-xl font-bold transition">0</button>
-                <button onclick="appendCalc('.')" class="bg-gray-800 hover:bg-gray-700 p-2.5 rounded-xl font-bold transition">.</button>
-            </div>
-        </div>
                 <!-- Entry Input Card -->
         <div class="bg-white/90 backdrop-blur-md p-5 rounded-2xl custom-shadow border border-pink-100 space-y-4">
             <h2 class="text-lg font-bold text-gray-700 flex items-center gap-2">
@@ -90,7 +100,7 @@
             <!-- Text Input -->
             <div>
                 <label class="block text-xs font-semibold text-gray-500 mb-1">विवरण लिखें (उदा. 10 diva या lais 15):</label>
-                <input type="text" id="noteInput" oninput="processInput()" placeholder="यहाँ लिखें..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-pink-500 focus:outline-none text-base">
+                <textarea id="noteInput" rows="3" oninput="processInput()" placeholder="यहाँ लिखें..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-pink-500 focus:outline-none text-base"></textarea>
             </div>
 
             <!-- Real-time Calculated Result Box -->
@@ -112,8 +122,8 @@
                     <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i> सेव की हुई एंट्रियां (History)
                 </h2>
                 <div class="space-x-2">
-                    <button onclick="downloadPDF()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition"><i class="fa-solid fa-file-pdf"></i> PDF डाउनलोड</button>
-                    <button onclick="clearAllHistory()" class="bg-red-100 hover:bg-red-200 text-red-600 px-3 py-1.5 rounded-lg text-xs font-medium transition"><i class="fa-solid fa-trash"></i> सब साफ़ करें</button>
+                    <button onclick="downloadPDF()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+                    <button onclick="clearAllHistory()" class="bg-red-100 hover:bg-red-200 text-red-600 px-3 py-1.5 rounded-lg text-xs font-medium transition"><i class="fa-solid fa-trash"></i> साफ़ करें</button>
                 </div>
             </div>
 
@@ -127,9 +137,8 @@
                 <span id="grandTotalAmount" class="text-2xl font-extrabold text-amber-300">₹0</span>
             </div>
         </div>
-            </div>
-
-    <!-- Settings Modal -->
+    </div>
+        <!-- Settings Modal -->
     <div id="settingsModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -159,16 +168,16 @@
             { name: "diva", rate: 80 },
             { name: "side patti aman", rate: 90 },
             { name: "side patti diva", rate: 80 },
-            { name: "item 5", rate: 50 },
-            { name: "item 6", rate: 60 },
-            { name: "item 7", rate: 70 },
-            { name: "item 8", rate: 120 },
-            { name: "item 9", rate: 150 },
-            { name: "item 10", rate: 200 },
-            { name: "item 11", rate: 110 },
-            { name: "item 12", rate: 130 },
-            { name: "item 13", rate: 140 },
-            { name: "item 14", rate: 160 },
+            { name: "patti", rate: 50 },
+            { name: "choli", rate: 60 },
+            { name: "border", rate: 120 },
+            { name: "dupatta", rate: 150 },
+            { name: "suit", rate: 250 },
+            { name: "saree", rate: 300 },
+            { name: "lace big", rate: 110 },
+            { name: "patch", rate: 45 },
+            { name: "button", rate: 10 },
+            { name: "thread", rate: 25 },
             { name: "item 15", rate: 180 }
         ];
 
@@ -178,13 +187,76 @@
         let currentCalculatedValue = { text: "", total: 0 };
         let calcInputString = "";
 
-        // Initialize App
         window.onload = function() {
             renderSavedEntries();
             buildSettingsUI();
+            makeDraggable(document.getElementById("floatingCalculator"));
         };
 
-        // Live Calculator Logic (Auto evaluate 2+2 = 4)
+        // Toggle Floating Calculator visibility
+        function toggleCalculator() {
+            let box = document.getElementById("calcModalBox");
+            box.classList.toggle("hidden");
+        }
+
+        // Draggable Feature for Floating Calculator
+        function makeDraggable(elmnt) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            let header = document.getElementById("calcHeaderHandle");
+            if (header) {
+                header.onmousedown = dragMouseDown;
+                header.ontouchstart = dragMouseDown;
+            } else {
+                elmnt.onmousedown = dragMouseDown;
+                elmnt.ontouchstart = dragMouseDown;
+            }
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                if (e.type === 'touchstart') {
+                    pos3 = e.touches[0].clientX;
+                    pos4 = e.touches[0].clientY;
+                } else {
+                    pos3 = e.clientX;
+                    pos4 = e.clientY;
+                }
+                document.onmouseup = closeDragElement;
+                document.ontouchend = closeDragElement;
+                document.onmousemove = elementDrag;
+                document.ontouchmove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                let clientX, clientY;
+                if (e.type === 'touchmove') {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                } else {
+                    clientX = e.clientX;
+                    clientY = e.clientY;
+                }
+                pos1 = pos3 - clientX;
+                pos2 = pos4 - clientY;
+                pos3 = clientX;
+                pos4 = clientY;
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+                elmnt.style.bottom = "auto";
+                elmnt.style.right = "auto";
+            }
+
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.ontouchend = null;
+                document.onmousemove = null;
+                document.ontouchmove = null;
+            }
+        }
+
+        // Live Calculator Logic (Auto evaluate)
         function appendCalc(val) {
             let display = document.getElementById("calcDisplay");
             let history = document.getElementById("calcHistory");
@@ -214,7 +286,6 @@
         function tryEval(isEquals = false) {
             try {
                 if(!calcInputString) return;
-                // Safe calculation evaluation
                 let sanitized = calcInputString.replace(/[^0-9+\-*/().]/g, '');
                 let res = Function('"use strict"; return (' + sanitized + ')')();
                 if(res !== undefined && !isNaN(res)) {
@@ -224,27 +295,31 @@
                         calcInputString = res.toString();
                     }
                 }
-            } catch(e) {
-                // Ignore while typing incomplete expressions like "2+"
-            }
+            } catch(e) {}
         }
 
-        function clearCalcHistory() {
-            calcInputString = "";
-            document.getElementById("calcDisplay").innerText = "0";
-            document.getElementById("calcHistory").innerText = "";
-        }
-
-        // Photo Handler
+        // Photo Handler with Compression
         function previewImage(event) {
             let file = event.target.files[0];
             if(file) {
                 let reader = new FileReader();
                 reader.onload = function(e) {
-                    currentPhotoBase64 = e.target.result;
-                    document.getElementById("photoPreview").src = currentPhotoBase64;
-                    document.getElementById("photoPreviewContainer").classList.remove("hidden");
-                }
+                    let img = new Image();
+                    img.onload = function() {
+                        let canvas = document.createElement('canvas');
+                        let ctx = canvas.getContext('2d');
+                        let maxWidth = 400;
+                        let scale = maxWidth / img.width;
+                        canvas.width = maxWidth;
+                        canvas.height = img.height * scale;
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.6);
+
+                        document.getElementById("photoPreview").src = currentPhotoBase64;
+                        document.getElementById("photoPreviewContainer").classList.remove("hidden");
+                    };
+                    img.src = e.target.result;
+                };
                 reader.readAsDataURL(file);
             }
         }
@@ -266,41 +341,49 @@
                 return;
             }
 
-            // Extract numbers and match rate keywords
-            let matchedRate = 0;
-            let matchedKeyword = "";
-            
-            // Sort rates by name length descending to match multi-word first (e.g. "side patti diva")
+            let lines = val.split('\n');
+            let grandLineTotal = 0;
             let sortedRates = [...rates].sort((a,b) => b.name.length - a.name.length);
+            let parsedLinesText = [];
 
-            for(let r of sortedRates) {
-                if(val.includes(r.name.toLowerCase())) {
-                    matchedRate = r.rate;
-                    matchedKeyword = r.name;
-                    break;
+            lines.forEach(line => {
+                let cleanLine = line.trim();
+                if(!cleanLine) return;
+
+                let matchedRate = 0;
+                for(let r of sortedRates) {
+                    if(cleanLine.includes(r.name.toLowerCase())) {
+                        matchedRate = r.rate;
+                        break;
+                    }
                 }
-            }
 
-            // Extract quantity number from text
-            let numberMatch = val.match(/\d+/);
-            let qty = numberMatch ? parseInt(numberMatch[0]) : 1;
+                let numberMatch = cleanLine.match(/\d+/);
+                let qty = numberMatch ? parseInt(numberMatch[0]) : 1;
 
-            if(matchedRate > 0) {
-                let total = qty * matchedRate;
-                currentCalculatedValue = { text: `${val} (റേറ്റ്: ${matchedRate})`, total: total };
-                document.getElementById("parsedDescText").innerText = `आइटम: "${val}" [${qty} × ₹${matchedRate}]`;
-                document.getElementById("parsedAmountText").innerText = "₹" + total;
+                if(matchedRate > 0) {
+                    let total = qty * matchedRate;
+                    grandLineTotal += total;
+                    parsedLinesText.push(`${cleanLine} (${qty}×₹${matchedRate} = ₹${total})`);
+                } else {
+                    parsedLinesText.push(cleanLine);
+                }
+            });
+
+            if(grandLineTotal > 0) {
+                currentCalculatedValue = { text: parsedLinesText.join(" | "), total: grandLineTotal };
+                document.getElementById("parsedDescText").innerText = `आइटम: "${val}"`;
+                document.getElementById("parsedAmountText").innerText = "₹" + grandLineTotal;
                 resultBox.classList.remove("hidden");
             } else {
-                // If no rate keyword matched, check if there's any direct math expression
                 currentCalculatedValue = { text: val, total: 0 };
                 document.getElementById("parsedDescText").innerText = val;
-                document.getElementById("parsedAmountText").innerText = "₹0 (रेट नहीं मिला)";
+                document.getElementById("parsedAmountText").innerText = "₹0";
                 resultBox.classList.remove("hidden");
             }
         }
 
-                // Save Entry Function
+        // Save Entry Function
         function saveCurrentEntry() {
             let noteText = document.getElementById("noteInput").value.trim();
             if(!noteText && !currentPhotoBase64) {
@@ -310,20 +393,23 @@
 
             let entry = {
                 id: Date.now() + Math.random(),
-                text: noteText,
+                text: noteText || "फोटो एंट्री",
                 photo: currentPhotoBase64,
                 calcText: currentCalculatedValue.text,
-                amount: currentCalculatedValue.total,
+                amount: currentCalculatedValue.total || 0,
                 time: new Date().toLocaleTimeString('hi-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
             };
 
-            let existingEntries = JSON.parse(localStorage.getItem('saved_entries')) || [];
-            existingEntries.push(entry);
-            savedEntries = existingEntries;
-            
-            localStorage.setItem('saved_entries', JSON.stringify(savedEntries));
+            try {
+                let existingEntries = JSON.parse(localStorage.getItem('saved_entries')) || [];
+                existingEntries.push(entry);
+                savedEntries = existingEntries;
+                localStorage.setItem('saved_entries', JSON.stringify(savedEntries));
+            } catch(e) {
+                alert("लोकल स्टोरेज फुल हो गया है!");
+                return;
+            }
 
-            // Reset inputs
             document.getElementById("noteInput").value = "";
             removePhoto();
             document.getElementById("liveResultBox").classList.add("hidden");
@@ -355,7 +441,7 @@
                             ${item.photo ? `<img src="${item.photo}" class="w-12 h-12 object-cover rounded-lg border shadow-xs cursor-pointer" onclick="window.open('${item.photo}')">` : `<div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-500 text-xs font-bold">नोट</div>`}
                             <div>
                                 <p class="text-xs text-gray-400">#${index + 1} • ${item.time}</p>
-                                <p class="text-sm font-semibold text-gray-800">${item.text}</p>
+                                <p class="text-sm font-semibold text-gray-800 whitespace-pre-line">${item.text}</p>
                                 <p class="text-xs text-indigo-600 font-medium">${item.calcText || ''}</p>
                             </div>
                         </div>
@@ -418,7 +504,7 @@
             }
             localStorage.setItem('custom_rates', JSON.stringify(rates));
             closeSettings();
-            alert("रेट सेटिंग्स सफलताપूर्वक सेव हो गई हैं!");
+            alert("रेट सेटिंग्स सफलतापूर्वक सेव हो गई हैं!");
         }
 
         // PDF Download Function
