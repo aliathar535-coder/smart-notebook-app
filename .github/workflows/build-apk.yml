@@ -38,7 +38,7 @@ jobs:
 
       - name: Create Cordova Project & Build for Android 15
         run: |
-          cordova create myApp com.gadipro.app gadipro
+          cordova create myApp com.smart-notebook-app.app gadipro
           cd myApp
           cordova platform add android@13.0.0
           cp ../index.html www/index.html
@@ -47,6 +47,6 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: gadipro-Android15-APK
+          name: smart-notebook-app-Android15-APK
           path: myApp/platforms/android/app/build/outputs/apk/debug/app-debug.apk
 
