@@ -46,14 +46,15 @@
                     </div>
                     <div>
                         <h1 id="editableAppTitle" contenteditable="true" onblur="saveCustomAppTitle()" class="text-base font-extrabold tracking-tight outline-none">ATHAR</h1>
-                        <div class="flex items-center gap-2 text-[11px] text-gray-500 font-medium">
-                            <span id="liveClockDisplay">--:--:--</span>
+                                                <div class="flex items-center gap-2 text-[11px] text-gray-500 font-medium">
+                            <span id="liveClockDisplay" class="transition-all">--:--:--</span>
                             <span>•</span>
                             <span id="liveDateDisplay">-- -- ----</span>
-                        </div>
-                    </div>
-                </div>
+                                                </div>
+                        
+                            
                 <div class="flex items-center gap-1.5 mr-6">
+                    <button onclick="openClockSettings()" class="w-9 h-9 bg-purple-50 hover:bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center transition shadow-sm" title="Clock Settings"><i class="fa-solid fa-clock"></i></button>
                     <button onclick="toggleCalculator()" class="w-9 h-9 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center transition shadow-sm"><i class="fa-solid fa-calculator"></i></button>
                     <button onclick="openSettings()" class="w-9 h-9 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl flex items-center justify-center transition shadow-sm"><i class="fa-solid fa-sliders"></i></button>
                 </div>
