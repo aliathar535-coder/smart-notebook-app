@@ -6,7 +6,7 @@
     <title>ATHAR Smart Notebook</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Caveat:wght@700&family=Teko:wght@500;600;700&family=Rozha+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Caveat:wght@700&family=Cinzel:wght@700&family=Lobster&family=Monoton&family=Pacifico&family=Poppins:wght@400;600;800&family=Press+Start+2P&family=Rozha+One&family=Satisfy&family=Teko:wght@600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         .custom-box-wrapper { position: relative; }
@@ -33,7 +33,7 @@
         .box-style-btn:hover { opacity: 1; transform: scale(1.1); }
     </style>
 </head>
-<body id="appBody" class="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 min-h-screen p-2 sm:p-4 text-gray-800">
+<body id="appBody" class="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 min-h-screen p-2 sm:p-4 text-gray-800 font-sans">
     <div id="appContainer" class="max-w-md mx-auto space-y-3.5">
         
         <!-- HEADER -->
@@ -45,7 +45,7 @@
                         <i class="fa-solid fa-book-open text-lg"></i>
                     </div>
                     <div>
-                        <h1 id="editableAppTitle" contenteditable="true" onblur="saveCustomAppTitle()" class="text-base font-extrabold text-gray-900 tracking-tight outline-none">ATHAR</h1>
+                        <h1 id="editableAppTitle" contenteditable="true" onblur="saveCustomAppTitle()" class="text-base font-extrabold tracking-tight outline-none">ATHAR</h1>
                         <div class="flex items-center gap-2 text-[11px] text-gray-500 font-medium">
                             <span id="liveClockDisplay">--:--:--</span>
                             <span>•</span>
@@ -60,8 +60,8 @@
             </div>
         </div>
 
-        <!-- DASHBOARD 1: GRAND TOTAL (NET BALANCE) -->
-        <div id="grandTotalCard" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-3xl p-5 shadow-xl custom-box-wrapper">
+        <!-- DASHBOARD 1: GRAND TOTAL -->
+        <div id="grandTotalCard" class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white rounded-3xl p-5 shadow-xl custom-box-wrapper">
             <button onclick="openBoxStyleModal('grandTotalCard')" class="box-style-btn" title="Edit Style"><i class="fa-solid fa-palette"></i></button>
             <div class="text-center space-y-1">
                 <span class="text-[11px] font-bold tracking-widest uppercase opacity-80">Grand Total (Kul Yog / Net Balance)</span>
@@ -87,8 +87,8 @@
                     <i class="fa-solid fa-calendar-week text-xs"></i>
                     <span class="text-[11px] font-bold uppercase tracking-wider">Sunday to Sunday</span>
                 </div>
-                <div id="dashSundayBalance" class="text-lg font-extrabold text-gray-900">₹0</div>
-                <p class="text-[10px] text-gray-400 font-medium">Is Sunday se pichle Sunday tak</p>
+                <div id="dashSundayBalance" class="text-lg font-extrabold">₹0</div>
+                <p class="text-[10px] opacity-70 font-medium">Is Sunday se pichle Sunday tak</p>
             </div>
             <div id="monthlyCard" class="bg-white/95 backdrop-blur-xl border border-gray-200/80 rounded-3xl p-3.5 shadow-xl custom-box-wrapper">
                 <button onclick="openBoxStyleModal('monthlyCard')" class="box-style-btn" title="Edit Style"><i class="fa-solid fa-palette"></i></button>
@@ -96,8 +96,8 @@
                     <i class="fa-solid fa-calendar-days text-xs"></i>
                     <span class="text-[11px] font-bold uppercase tracking-wider">Mahina (Monthly)</span>
                 </div>
-                <div id="dashMonthlyBalance" class="text-lg font-extrabold text-gray-900">₹0</div>
-                <p class="text-[10px] text-gray-400 font-medium">1 Tarikh se Aaj tak</p>
+                <div id="dashMonthlyBalance" class="text-lg font-extrabold">₹0</div>
+                <p class="text-[10px] opacity-70 font-medium">1 Tarikh se Aaj tak</p>
             </div>
         </div>
 
@@ -107,7 +107,7 @@
             <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center gap-2">
                     <span class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-sm"><i class="fa-solid fa-pen-nib"></i></span>
-                    <h3 class="text-sm font-bold text-gray-800">Nayi Pravisti (New Entry)</h3>
+                    <h3 class="text-sm font-bold">Nayi Pravisti (New Entry)</h3>
                 </div>
             </div>
             
@@ -135,8 +135,8 @@
             </div>
 
             <div class="mb-3">
-                <label class="block text-[11px] font-bold text-gray-500 mb-1">Vivaran Likhein (Uda. 20 diva ya 15 lais):</label>
-                <textarea id="noteInput" oninput="calculateLiveTotal()" rows="2" placeholder="Yahan saman ya sankhya likhein..." class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium text-gray-800 focus:outline-none focus:border-indigo-500 transition resize-none"></textarea>
+                <label class="block text-[11px] font-bold opacity-70 mb-1">Vivaran Likhein (Uda. 20 diva ya 15 lais):</label>
+                <textarea id="noteInput" oninput="calculateLiveTotal()" rows="2" placeholder="Yahan saman ya sankhya likhein..." class="w-full px-3 py-2 bg-gray-50/80 border border-gray-200 rounded-xl text-xs font-medium text-gray-800 focus:outline-none focus:border-indigo-500 transition resize-none"></textarea>
             </div>
 
             <div class="flex items-center justify-between bg-indigo-50/70 border border-indigo-100 px-3.5 py-2.5 rounded-xl mb-3">
@@ -155,7 +155,7 @@
             <div class="flex items-center justify-between pb-2 border-b border-gray-100 mb-3">
                 <div class="flex items-center gap-2">
                     <span class="w-8 h-8 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-sm"><i class="fa-solid fa-clock-rotate-left"></i></span>
-                    <h3 class="text-sm font-bold text-gray-800">Purani Pravisti (History Feed)</h3>
+                    <h3 class="text-sm font-bold">Purani Pravisti (History Feed)</h3>
                 </div>
                 <div class="flex items-center gap-1 mr-6">
                     <button onclick="downloadPDF()" class="p-2 text-indigo-600 hover:text-indigo-800 text-xs transition" title="Download PDF"><i class="fa-solid fa-file-pdf text-sm"></i></button>
@@ -174,15 +174,15 @@
 
     </div>
 
-    <!-- FLOATING CALCULATOR MODAL -->
-    <div id="floatingCalculator" class="hidden fixed top-20 right-4 w-72 bg-white/95 backdrop-blur-xl border border-gray-200 shadow-2xl rounded-3xl overflow-hidden z-40">
-        <div id="calcDragHeader" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-2 flex items-center justify-between cursor-move">
+    <!-- FLOATING DRAGGABLE CALCULATOR -->
+    <div id="floatingCalculator" class="hidden fixed top-20 right-4 w-72 bg-white/95 backdrop-blur-xl border border-gray-200 shadow-2xl rounded-3xl overflow-hidden z-40 resize overflow-auto min-w-[260px]">
+        <div id="calcDragHeader" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-2 flex items-center justify-between cursor-move select-none">
             <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-calculator"></i> Calculator</span>
             <button onclick="toggleCalculator()" class="text-white hover:text-gray-200 text-sm p-1"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="p-3 bg-gray-50 border-b border-gray-100 text-right">
             <div id="calcDisplay" class="text-2xl font-black text-gray-800 tracking-wider truncate">0</div>
-            <div id="calcAutoResult" class="text-[11px] font-bold text-indigo-600 mt-0.5"></div>
+            <div id="calcAutoResult" class="text-[11px] font-bold text-indigo-600 mt-0.5 min-h-[16px]"></div>
         </div>
         <div class="p-3 grid grid-cols-4 gap-1.5">
             <button onclick="appendCalc('C')" class="p-2.5 bg-rose-50 text-rose-600 rounded-xl text-xs font-bold hover:bg-rose-100">C</button>
@@ -211,34 +211,107 @@
         </div>
     </div>
 
-    <!-- BOX STYLE MODAL -->
+    <!-- BOX MULTI-COLOR SHADING & TEXT STYLE MODAL -->
     <div id="boxStyleMdl" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-3.5 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between pb-2 border-b border-gray-100">
-                <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2"><i class="fa-solid fa-palette text-indigo-600"></i> Box Customization</h3>
+                <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2"><i class="fa-solid fa-palette text-indigo-600"></i> Advanced Box & Text Style</h3>
                 <button onclick="closeBoxStyleModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
+            
+            <!-- Shading Mode Selection -->
             <div>
-                <label class="block text-[11px] font-bold text-gray-500 mb-1">Background Style:</label>
-                <select id="boxGradType" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold">
-                    <option value="solid">Single Solid Color</option>
-                    <option value="glass">Glass White Frosted</option>
-                    <option value="dark">Dark Glass</option>
+                <label class="block text-[11px] font-bold text-gray-500 mb-1">Color / Shading Style:</label>
+                <select id="boxGradType" onchange="toggleGradientOptions()" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold">
+                    <option value="solid">1-Color (Solid Flat)</option>
+                    <option value="gradient2">2-Colors Shading (Linear Gradient)</option>
+                    <option value="gradient3" selected>3-Colors Shading (Multi-Mix Gradient)</option>
+                    <option value="radial">Radial Circle Shading</option>
+                    <option value="conic">Conic Metallic Shading</option>
+                    <option value="glass">White Glass Frosted</option>
+                    <option value="dark">Dark Night Glass</option>
                 </select>
             </div>
-            <div>
-                <label class="block text-[11px] font-bold text-gray-500 mb-1">Box Color / Tint:</label>
+
+            <!-- Single Color Input -->
+            <div id="singleColorGroup" class="hidden">
+                <label class="block text-[11px] font-bold text-gray-500 mb-1">Box Primary Color:</label>
                 <input type="color" id="boxPrimaryColor" value="#ffffff" class="w-full h-10 rounded-xl cursor-pointer bg-transparent">
             </div>
+
+            <!-- Multi-Color Mix Inputs -->
+            <div id="gradientColorGroup" class="space-y-2">
+                <div class="grid grid-cols-3 gap-2">
+                    <div>
+                        <label class="block text-[9px] font-bold text-gray-500">Color 1</label>
+                        <input type="color" id="gradColor1" value="#4f46e5" class="w-full h-9 rounded-xl cursor-pointer bg-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-[9px] font-bold text-gray-500">Color 2</label>
+                        <input type="color" id="gradColor2" value="#9333ea" class="w-full h-9 rounded-xl cursor-pointer bg-transparent">
+                    </div>
+                    <div id="gradColor3Wrapper">
+                        <label class="block text-[9px] font-bold text-gray-500">Color 3</label>
+                        <input type="color" id="gradColor3" value="#ec4899" class="w-full h-9 rounded-xl cursor-pointer bg-transparent">
+                    </div>
+                </div>
+                <div id="gradAngleWrapper">
+                    <label class="block text-[10px] font-bold text-gray-500">Shading Angle Direction:</label>
+                    <select id="gradAngle" class="w-full px-2.5 py-1.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold">
+                        <option value="to right">Left to Right (Horizontal)</option>
+                        <option value="to bottom" selected>Top to Bottom (Vertical)</option>
+                        <option value="135deg">Diagonal (135°)</option>
+                        <option value="45deg">Reverse Diagonal (45°)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Direct Text Color -->
             <div>
-                <label class="block text-[11px] font-bold text-gray-500 mb-1">Text Font Style:</label>
+                <label class="block text-[11px] font-bold text-gray-500 mb-1">Text Color (Akshar Ka Rang):</label>
+                <input type="color" id="boxTextColor" value="#ffffff" class="w-full h-10 rounded-xl cursor-pointer bg-transparent">
+            </div>
+
+            <!-- 11 Font Styles -->
+            <div>
+                <label class="block text-[11px] font-bold text-gray-500 mb-1">Font Family Style (11 Types):</label>
                 <select id="boxFontFamily" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold">
-                    <option value="Poppins, sans-serif">Poppins (Modern)</option>
-                    <option value="Caveat, cursive">Caveat (Handwritten)</option>
-                    <option value="Teko, sans-serif">Teko (Bold)</option>
-                    <option value="Rozha One, serif">Rozha One (Classical)</option>
+                    <option value="'Poppins', sans-serif">1. Poppins (Modern Clean)</option>
+                    <option value="'Caveat', cursive">2. Caveat (Handwritten)</option>
+                    <option value="'Teko', sans-serif">3. Teko (Bold Compact)</option>
+                    <option value="'Rozha One', serif">4. Rozha One (Classical Indian)</option>
+                    <option value="'Pacifico', cursive">5. Pacifico (Cursive Retro)</option>
+                    <option value="'Monoton', cursive">6. Monoton (Neon Disco)</option>
+                    <option value="'Lobster', cursive">7. Lobster (Fancy Script)</option>
+                    <option value="'Press Start 2P', cursive">8. Pixel Game Style</option>
+                    <option value="'Satisfy', cursive">9. Satisfy (Elegant Calligraphy)</option>
+                    <option value="'Cinzel', serif">10. Cinzel (Royal Roman)</option>
+                    <option value="'Bangers', cursive">11. Bangers (Comic Bold)</option>
                 </select>
             </div>
+
+            <!-- Font Formatting & Unicode -->
+            <div class="grid grid-cols-2 gap-2 pt-1 border-t border-gray-100">
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 mb-1">Format Toggles:</label>
+                    <div class="flex items-center gap-2 text-xs">
+                        <label><input type="checkbox" id="chkBold"> <b>B</b></label>
+                        <label><input type="checkbox" id="chkItalic"> <i>I</i></label>
+                        <label><input type="checkbox" id="chkUnderline"> <u>U</u></label>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 mb-1">Unicode Generator:</label>
+                    <select id="unicodeStyleType" class="w-full px-2 py-1 bg-gray-50 border border-gray-200 rounded-lg text-xs">
+                        <option value="NONE">Normal Text</option>
+                        <option value="GOTHIC">Gothic (𝕬𝕭𝕮)</option>
+                        <option value="CURSIVE">Cursive (𝓐𝓑𝓒)</option>
+                        <option value="CIRCLE">Circle (ⓐⓑⓒ)</option>
+                        <option value="SQUARE">Square (🅰🅱)</option>
+                    </select>
+                </div>
+            </div>
+
             <button onclick="saveBoxStyleSettings()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-500/30">Style Save Karein</button>
         </div>
     </div>
@@ -298,6 +371,19 @@
         { name: "salwar", rate: 110 },
         { name: "coat", rate: 500 }
     ];
+
+    const TextStyleGenerator = {
+        gothicMap: {'A':"𝕬",'B':"𝕭",'C':"𝕮",'D':"𝕯",'E':"𝕰",'F':"𝕱",'G':"𝕲",'H':"𝕧",'I':"𝕴",'J':"𝕵",'K':"𝕶",'L':"𝕷",'M':"𝕸",'N':"𝕹",'O':"𝕺",'P':"𝕻",'Q':"𝕼",'R':"𝕽",'S':"𝕾",'T':"𝕿",'U':"𝖀",'V':"𝖁",'W':"𝖂",'X':"𝖃",'Y':"𝖄",'Z':"𝖅",'a':"𝖆",'b':"𝖇",'c':"𝖈",'d':"𝖉",'e':"𝖊",'f':"𝖋",'g':"𝖌",'h':"𝖍",'i':"𝖎",'j':"𝖏",'k':"𝖐",'l':"𝖑",'m':"𝖒",'n':"𝖓",'o':"𝖔",'p':"𝖕",'q':"𝖖",'r':"𝖗",'s':"𝖘",'t':"𝖙",'u':"𝖚",'v':"𝖛",'w':"𝖜",'x':"𝖞",'y':"𝖟"},
+        cursiveMap: {'A':"𝓐",'B':"𝓑",'C':"𝓒",'D':"𝓓",'E':"𝓔",'F':"𝓯",'G':"𝓖",'H':"𝓗",'I':"𝓘",'J':"𝓙",'K':"𝓚",'L':"𝓛",'M':"𝓜",'N':"𝓝",'O':"𝓞",'P':"𝓟",'Q':"𝓠",'R':"𝓡",'S':"𝓢",'T':"𝓣",'U':"𝓤",'V':"𝓥",'W':"𝓦",'X':"𝓧",'Y':"𝓨",'Z':"𝓩",'a':"𝓪",'b':"𝓫",'c':"𝓬",'d':"𝓭",'e':"𝓮",'f':"𝓯",'g':"```javascript
+'g':"𝓰",'h':"𝓱",'i':"𝓲",'j':"𝓳",'k':"𝓴",'l':"𝓵",'m':"𝓶",'n':"𝓷",'o':"𝓸",'p':"𝓹",'q':"𝓺",'r':"𝓻",'s':"𝓼",'t':"𝓽",'u':"𝓾",'v':"𝓿",'w':"𝔀",'x':"𝓯",'y':"𝔂",'z':"𝓯"},
+        circleMap: {'A':"ⓐ",'B':"ⓑ",'C':"ⓒ",'D':"ⓓ",'E':"ⓔ",'F':"ⓕ",'G':"ⓖ",'H':"ⓗ",'I':"ⓘ",'J':"ⓙ",'K':"ⓚ",'L':"ⓛ",'M':"ⓜ",'N':"ⓝ",'O':"ⓞ",'P':"ⓟ",'Q':"ⓠ",'R':"ⓡ",'S':"ⓢ",'T':"ⓣ",'U':"ⓤ",'V':"ⓥ",'W':"ⓦ",'X':"ⓧ",'Y':"ⓨ",'Z':"ⓩ",'a':"ⓐ",'b':"ⓑ",'c':"ⓒ",'d':"ⓓ",'e':"ⓔ",'f':"ⓕ",'g':"ⓖ",'h':"ⓗ",'i':"ⓘ",'j':"ⓙ",'k':"ⓚ",'l':"ⓛ",'m':"ⓜ",'n':"ⓝ",'o':"ⓞ",'p':"ⓟ",'q':"ⓠ",'r':"ⓡ",'s':"ⓢ",'t':"ⓣ",'u':"ⓤ",'v':"ⓥ",'w':"ⓦ",'x':"ⓧ",'y':"ⓨ",'z':"ⓩ"},
+        squareMap: {'A':"🅰",'B':"🅱",'C':"🅲",'D':"🅳",'E':"🅴",'F':"🅵",'G':"🅶",'H':"🅷",'I':"🅸",'J':"🅹",'K':"🅺",'L':"🅻",'M':"🅼",'N':"🅽",'O':"🅾",'P':"🅿",'Q':"🅑",'R':"🆁",'S':"🅂",'T':"🅃",'U':"🅄",'V':"🅅",'W':"7",'X':"🅯",'Y':"🅈",'Z':"🅉",'a':"🅰",'b':"🅱",'c':"🅲",'d':"🅳",'e':"🅴",'f':"🅵",'g':"🅶",'h':"🅷",'i':"🅸",'j':"🅹",'k':"🅺",'l':"🅻",'m':"🅼",'n':"🅽",'o':"🅾",'p':"🅿",'q':"🅑",'r':"🆁",'s':"🅂",'t':"🅃",'u':"🅄",'v':"🅅",'w':"7",'x':"🅯",'y':"🅈",'z':"🅉"},
+        convertText: function(inputText, styleType) {
+            let map = this[styleType.toLowerCase() + 'Map'];
+            if (!map) return inputText;
+            return inputText.split('').map(c => map[c] || c).join('');
+        }
+    };
 
     function handleImageUpload(event) {
         let file = event.target.files[0];
@@ -456,7 +542,7 @@
                         </span>
                         <span class="text-[10px] text-gray-400">${entry.dateStr || ''} ${entry.timeStr || ''}</span>
                     </div>
-                    <p class="text-xs font-medium text-gray-800 whitespace-pre-wrap">${entry.note || ''}</p>
+                    <p class="text-xs font-medium whitespace-pre-wrap">${entry.note || ''}</p>
                     ${photoHTML}
                 </div>
                 <div class="text-right flex flex-col items-end gap-1">
@@ -509,10 +595,50 @@
         document.getElementById('dashMonthlyBalance').innerText = `₹${monthlyBal}`;
     }
 
-    // Calculator Functions
+    // Draggable Calculator Drag Logic
+    let calcEl = document.getElementById('floatingCalculator');
+    let calcHeader = document.getElementById('calcDragHeader');
+    let isDraggingCalc = false, startX = 0, startY = 0, initialLeft = 0, initialTop = 0;
+
+    calcHeader.addEventListener('mousedown', startCalcDrag);
+    calcHeader.addEventListener('touchstart', startCalcDrag, {passive: false});
+
+    function startCalcDrag(e) {
+        isDraggingCalc = true;
+        let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        startX = clientX;
+        startY = clientY;
+        let rect = calcEl.getBoundingClientRect();
+        initialLeft = rect.left;
+        initialTop = rect.top;
+
+        document.addEventListener('mousemove', dragCalc);
+        document.addEventListener('touchmove', dragCalc, {passive: false});
+        document.addEventListener('mouseup', stopCalcDrag);
+        document.addEventListener('touchend', stopCalcDrag);
+    }
+
+    function dragCalc(e) {
+        if(!isDraggingCalc) return;
+        if(e.cancelable) e.preventDefault();
+        let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        let dx = clientX - startX;
+        let dy = clientY - startY;
+        calcEl.style.left = `${initialLeft + dx}px`;
+        calcEl.style.top = `${initialTop + dy}px`;
+        calcEl.style.right = 'auto';
+    }
+
+    function stopCalcDrag() {
+        isDraggingCalc = false;
+        document.removeEventListener('mousemove', dragCalc);
+        document.removeEventListener('touchmove', dragCalc);
+    }
+
     function toggleCalculator() {
-        let calc = document.getElementById('floatingCalculator');
-        calc.classList.toggle('hidden');
+        calcEl.classList.toggle('hidden');
     }
 
     function appendCalc(val) {
@@ -524,12 +650,26 @@
         }
         if(display.innerText === '0') display.innerText = val;
         else display.innerText += val;
+        autoCalcLive();
     }
 
     function backspaceCalc() {
         let display = document.getElementById('calcDisplay');
         if(display.innerText.length > 1) display.innerText = display.innerText.slice(0, -1);
         else display.innerText = '0';
+        autoCalcLive();
+    }
+
+    function autoCalcLive() {
+        let display = document.getElementById('calcDisplay').innerText;
+        try {
+            let res = eval(display);
+            if(res !== undefined && !isNaN(res)) {
+                document.getElementById('calcAutoResult').innerText = `= ${res}`;
+            }
+        } catch(e) {
+            document.getElementById('calcAutoResult').innerText = '';
+        }
     }
 
     function calculateResult() {
@@ -543,7 +683,7 @@
         }
     }
 
-    // Box Style Customization Functions
+    // Advanced Box Style & Shading Customization Functions
     function openBoxStyleModal(boxId) {
         activeStylingBoxId = boxId;
         document.getElementById('boxStyleMdl').classList.remove('hidden');
@@ -554,36 +694,101 @@
         activeStylingBoxId = null;
     }
 
+    function toggleGradientOptions() {
+        let type = document.getElementById('boxGradType').value;
+        let singleGroup = document.getElementById('singleColorGroup');
+        let gradGroup = document.getElementById('gradientColorGroup');
+        let color3Wrap = document.getElementById('gradColor3Wrapper');
+        let angleWrap = document.getElementById('gradAngleWrapper');
+
+        if(type === 'solid') {
+            singleGroup.classList.remove('hidden');
+            gradGroup.classList.add('hidden');
+        } else if(type === 'gradient2') {
+            singleGroup.classList.add('hidden');
+            gradGroup.classList.remove('hidden');
+            color3Wrap.classList.add('hidden');
+            angleWrap.classList.remove('hidden');
+        } else if(type === 'gradient3') {
+            singleGroup.classList.add('hidden');
+            gradGroup.classList.remove('hidden');
+            color3Wrap.classList.remove('hidden');
+            angleWrap.classList.remove('hidden');
+        } else if(type === 'radial' || type === 'conic') {
+            singleGroup.classList.add('hidden');
+            gradGroup.classList.remove('hidden');
+            color3Wrap.classList.remove('hidden');
+            angleWrap.classList.add('hidden');
+        } else {
+            singleGroup.classList.add('hidden');
+            gradGroup.classList.add('hidden');
+        }
+    }
+
     function saveBoxStyleSettings() {
         if(!activeStylingBoxId) return;
         let box = document.getElementById(activeStylingBoxId);
         let gradType = document.getElementById('boxGradType').value;
         let primaryColor = document.getElementById('boxPrimaryColor').value;
+        let textColor = document.getElementById('boxTextColor').value;
         let fontFamily = document.getElementById('boxFontFamily').value;
+        
+        let c1 = document.getElementById('gradColor1').value;
+        let c2 = document.getElementById('gradColor2').value;
+        let c3 = document.getElementById('gradColor3').value;
+        let angle = document.getElementById('gradAngle').value;
+
+        let isBold = document.getElementById('chkBold').checked;
+        let isItalic = document.getElementById('chkItalic').checked;
+        let isUnderline = document.getElementById('chkUnderline').checked;
+        let unicodeStyle = document.getElementById('unicodeStyleType').value;
 
         if(box) {
+            // Apply Multi-Color Gradient Shading
             if(gradType === 'solid') {
                 box.style.background = primaryColor;
+            } else if(gradType === 'gradient2') {
+                box.style.background = `linear-gradient(${angle}, ${c1}, ${c2})`;
+            } else if(gradType === 'gradient3') {
+                box.style.background = `linear-gradient(${angle}, ${c1}, ${c2}, ${c3})`;
+            } else if(gradType === 'radial') {
+                box.style.background = `radial-gradient(circle at center, ${c1}, ${c2}, ${c3})`;
+            } else if(gradType === 'conic') {
+                box.style.background = `conic-gradient(from 0deg at 50% 50%, ${c1}, ${c2}, ${c3}, ${c1})`;
             } else if(gradType === 'glass') {
                 box.style.background = 'rgba(255, 255, 255, 0.9)';
             } else if(gradType === 'dark') {
                 box.style.background = 'rgba(15, 23, 42, 0.9)';
-                box.style.color = '#ffffff';
             }
+
+            // Direct Text Color Application
+            box.style.color = textColor;
             box.style.fontFamily = fontFamily;
+            box.style.fontWeight = isBold ? 'bold' : 'normal';
+            box.style.fontStyle = isItalic ? 'italic' : 'normal';
+            box.style.textDecoration = isUnderline ? 'underline' : 'none';
+
+            let titleEl = box.querySelector('h1, h2, h3');
+            if(titleEl && unicodeStyle !== 'NONE') {
+                let cleanText = titleEl.innerText;
+                titleEl.innerText = TextStyleGenerator.convertText(cleanText, unicodeStyle);
+            }
 
             let customStyles = JSON.parse(localStorage.getItem('athar_box_custom_styles')) || {};
             customStyles[activeStylingBoxId] = {
                 bgStyle: box.style.background,
-                txtColor: box.style.color,
-                fontFamily: fontFamily
+                txtColor: textColor,
+                fontFamily: fontFamily,
+                fontWeight: box.style.fontWeight,
+                fontStyle: box.style.fontStyle,
+                textDecoration: box.style.textDecoration,
+                unicodeStyle: unicodeStyle
             };
             localStorage.setItem('athar_box_custom_styles', JSON.stringify(customStyles));
         }
         closeBoxStyleModal();
     }
 
-    // Settings & Rates Functions
     function openSettings() {
         document.getElementById('settingsModal').classList.remove('hidden');
         let container = document.getElementById('rateSlotsContainer');
@@ -621,14 +826,13 @@
     function changeScreenTheme() {
         let theme = document.getElementById('bgThemeSelect').value;
         let body = document.getElementById('appBody');
-        if(theme === 'sunset') body.className = "bg-gradient-to-br from-amber-900 via-orange-950 to-rose-950 min-h-screen p-2 sm:p-4 text-gray-800";
-        else if(theme === 'light') body.className = "bg-gradient-to-br from-slate-100 via-indigo-100 to-purple-100 min-h-screen p-2 sm:p-4 text-gray-800";
-        else if(theme === 'emerald') body.className = "bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-950 min-h-screen p-2 sm:p-4 text-gray-800";
-        else body.className = "bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 min-h-screen p-2 sm:p-4 text-gray-800";
+        if(theme === 'sunset') body.className = "bg-gradient-to-br from-amber-900 via-orange-950 to-rose-950 min-h-screen p-2 sm:p-4 text-gray-800 font-sans transition-colors duration-300";
+        else if(theme === 'light') body.className = "bg-gradient-to-br from-slate-100 via-indigo-100 to-purple-100 min-h-screen p-2 sm:p-4 text-gray-800 font-sans transition-colors duration-300";
+        else if(theme === 'emerald') body.className = "bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-950 min-h-screen p-2 sm:p-4 text-gray-800 font-sans transition-colors duration-300";
+        else body.className = "bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 min-h-screen p-2 sm:p-4 text-gray-800 font-sans transition-colors duration-300";
         localStorage.setItem('athar_screen_theme', theme);
     }
 
-    // Zoom Modal Functions
     function openPhotoZoom(imgSrc) {
         let modal = document.getElementById('photoZoomModal');
         let modalImg = document.getElementById('zoomedImagePreview');
@@ -668,6 +872,12 @@
         let loadedRates = localStorage.getItem('athar_custom_rates');
         if(loadedRates) customRates = JSON.parse(loadedRates);
 
+        let savedTitle = localStorage.getItem('athar_custom_app_title');
+        if(savedTitle) {
+            let titleEl = document.getElementById('editableAppTitle');
+            if(titleEl) titleEl.innerText = savedTitle;
+        }
+
         let savedTheme = localStorage.getItem('athar_screen_theme');
         if(savedTheme) {
             let themeSel = document.getElementById('bgThemeSelect');
@@ -683,6 +893,9 @@
                 boxEl.style.background = st.bgStyle;
                 if(st.txtColor) boxEl.style.color = st.txtColor;
                 if(st.fontFamily) boxEl.style.fontFamily = st.fontFamily;
+                if(st.fontWeight) boxEl.style.fontWeight = st.fontWeight;
+                if(st.fontStyle) boxEl.style.fontStyle = st.fontStyle;
+                if(st.textDecoration) boxEl.style.textDecoration = st.textDecoration;
             }
         });
 
