@@ -3,552 +3,774 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Notebook & Rate Calculator</title>
+    <title>ATHAR - Smart Notebook & Rate Calculator</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- html2pdf.js for PDF Generation -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Teko:wght@600&display=swap" rel="stylesheet">
+    <!-- html2pdf for PDF export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #f0f4ff 0%, #ffe4e6 50%, #fef3c7 100%); min-height: 100vh; }
-        .custom-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
-        #floatingCalculator { touch-action: none; position: fixed; bottom: 20px; right: 20px; z-index: 100; }
+        body { font-family: 'Poppins', sans-serif; }
+        .open-book-bg {
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            border-radius: 20px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.08), 0 10px 25px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .open-book-spine {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #cbd5e1, #94a3b8, #cbd5e1);
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
     </style>
 </head>
-<body class="p-3 sm:p-6 text-gray-800 relative">
-    
-    <!-- Draggable Floating Calculator Button & Modal -->
-    <div id="floatingCalculator">
-        <!-- Calculator Toggle Icon Button -->
-        <button onclick="toggleCalculator()" class="w-14 h-14 bg-gradient-to-tr from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white rounded-full shadow-2xl flex items-center justify-center text-2xl border-2 border-white cursor-pointer transition transform hover:scale-110">
-            <i class="fa-solid fa-calculator"></i>
-        </button>
+<body class="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 min-h-screen p-2 sm:p-4 text-gray-800 pb-20">
 
-        <!-- Calculator Popup Box (Hidden by default) -->
-        <div id="calcModalBox" class="hidden absolute bottom-16 right-0 w-80 bg-gradient-to-br from-indigo-950 to-slate-900 text-white p-4 rounded-2xl custom-shadow border border-indigo-500/40 z-50">
-            <div class="flex justify-between items-center mb-2 cursor-move" id="calcHeaderHandle">
-                <span class="text-xs uppercase tracking-wider text-indigo-300 font-bold flex items-center gap-1">
-                    <i class="fa-solid fa-calculator text-amber-400"></i> मिनी कैलकुलेटर (Drag me)
-                </span>
-                <button onclick="toggleCalculator()" class="text-xs text-red-400 hover:text-red-300 font-bold px-1.5 py-0.5 bg-red-500/20 rounded"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="bg-black/50 p-3 rounded-xl mb-3 border border-white/10 text-right">
-                <div id="calcHistory" class="text-xs text-gray-400 h-5 overflow-x-auto whitespace-nowrap"></div>
-                <div id="calcDisplay" class="text-2xl font-bold text-amber-400 tracking-wider overflow-x-auto whitespace-nowrap">0</div>
-            </div>
-            <div class="grid grid-cols-4 gap-1.5">
-                <button onclick="appendCalc('C')" class="bg-red-500/80 hover:bg-red-600 p-2 rounded-xl font-bold text-sm transition">C</button>
-                <button onclick="appendCalc('⌫')" class="bg-amber-600/80 hover:bg-amber-700 p-2 rounded-xl font-bold text-sm transition"><i class="fa-solid fa-delete-left"></i></button>
-                <button onclick="appendCalc('/')" class="bg-indigo-600 hover:bg-indigo-700 p-2 rounded-xl font-bold text-sm transition">÷</button>
-                <button onclick="appendCalc('*')" class="bg-indigo-600 hover:bg-indigo-700 p-2 rounded-xl font-bold text-sm transition">×</button>
-                
-                <button onclick="appendCalc('7')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">7</button>
-                <button onclick="appendCalc('8')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">8</button>
-                <button onclick="appendCalc('9')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">9</button>
-                <button onclick="appendCalc('-')" class="bg-indigo-600 hover:bg-indigo-700 p-2 rounded-xl font-bold text-sm transition">-</button>
-                
-                <button onclick="appendCalc('4')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">4</button>
-                <button onclick="appendCalc('5')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">5</button>
-                <button onclick="appendCalc('6')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">6</button>
-                <button onclick="appendCalc('+')" class="bg-indigo-600 hover:bg-indigo-700 p-2 rounded-xl font-bold text-sm transition">+</button>
-                
-                <button onclick="appendCalc('1')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">1</button>
-                <button onclick="appendCalc('2')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">2</button>
-                <button onclick="appendCalc('3')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">3</button>
-                <button onclick="appendCalc('=')" class="row-span-2 bg-gradient-to-t from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 p-2 rounded-xl font-bold flex items-center justify-center text-sm transition">=</button>
-                
-                <button onclick="appendCalc('0')" class="col-span-2 bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">0</button>
-                <button onclick="appendCalc('.')" class="bg-gray-800 hover:bg-gray-700 p-2 rounded-xl font-bold text-sm transition">.</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="max-w-2xl mx-auto space-y-6">
-        <!-- Header -->
-        <header class="bg-gradient-to-r from-violet-600 via-pink-600 to-amber-500 p-5 rounded-2xl text-white custom-shadow flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold flex items-center gap-2">
-                    <i class="fa-solid fa-book-open"></i> Smart Notebook
-                </h1>
-                <p class="text-xs text-violet-100 mt-1">ऑटो-कैलकुलेटर, फोटो और सेविंग सिस्टम के साथ</p>
-            </div>
-            <button onclick="openSettings()" class="bg-white/20 hover:bg-white/35 px-4 py-2 rounded-xl text-sm font-medium backdrop-blur-md transition flex items-center gap-1.5 border border-white/30">
-                <i class="fa-solid fa-gear"></i> रेट सेटिंग्स
-            </button>
-        </header>
-                <!-- Entry Input Card -->
-        <div class="bg-white/90 backdrop-blur-md p-5 rounded-2xl custom-shadow border border-pink-100 space-y-4">
-            <h2 class="text-lg font-bold text-gray-700 flex items-center gap-2">
-                <i class="fa-solid fa-pen-to-square text-pink-600"></i> नई प्रविष्टि (New Entry) जोड़ें
-            </h2>
+    <div id="appContainer" class="max-w-2xl mx-auto space-y-4">
+        
+        <!-- OPEN BOOK HEADER -->
+        <div class="open-book-bg p-4 sm:p-6 border-4 border-amber-200/60 overflow-hidden shadow-2xl relative">
+            <div class="open-book-spine hidden sm:block"></div>
             
-            <!-- Photo Upload -->
-            <div class="flex items-center gap-4">
-                <label class="flex-1 border-2 border-dashed border-pink-300 hover:border-pink-500 p-3 rounded-xl text-center cursor-pointer bg-pink-50/50 hover:bg-pink-50 transition flex items-center justify-center gap-2 text-pink-700 font-medium text-sm">
-                    <i class="fa-solid fa-camera text-lg"></i> गैलरी से फोटो जोड़ें
-                    <input type="file" id="itemPhoto" accept="image/*" class="hidden" onchange="previewImage(event)">
-                </label>
-                <div id="photoPreviewContainer" class="hidden relative w-16 h-16 rounded-xl overflow-hidden border border-gray-300 shadow-sm">
-                    <img id="photoPreview" class="w-full h-full object-cover">
-                    <button onclick="removePhoto()" class="absolute top-0 right-0 bg-red-600 text-white p-1 text-xs rounded-bl-lg"><i class="fa-solid fa-xmark"></i></button>
+            <div class="flex items-center justify-between relative z-10">
+                <!-- Book Left Page: Name & Digital Clock -->
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-tr from-amber-600 to-amber-800 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg border border-amber-300/40">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-black text-amber-950 tracking-wider flex items-center gap-2">
+                            ATHAR <span class="text-xs bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-full border border-amber-400">NOTEBOOK</span>
+                        </h1>
+                        <p class="text-xs font-semibold text-slate-600 flex items-center gap-1.5 mt-0.5">
+                            <i class="fa-regular fa-clock text-indigo-600"></i>
+                            <span id="liveClockDisplay">--:--:--</span>
+                            <span>•</span>
+                            <span id="liveDateDisplay">-- --- ----</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Top Right Icons: Mini Calc Toggle & Settings -->
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleCalculator()" class="w-10 h-10 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl flex items-center justify-center shadow-lg transition active:scale-95" title="Calculator">
+                        <i class="fa-solid fa-calculator text-lg"></i>
+                    </button>
+                    <button onclick="openSettings()" class="w-10 h-10 bg-slate-700 hover:bg-slate-800 text-white rounded-xl flex items-center justify-center shadow-lg transition active:scale-95" title="Settings">
+                        <i class="fa-solid fa-sliders text-lg"></i>
+                    </button>
                 </div>
             </div>
-
-            <!-- Text Input -->
-            <div>
-                <label class="block text-xs font-semibold text-gray-500 mb-1">विवरण लिखें (उदा. 10 diva या lais 15):</label>
-                <textarea id="noteInput" rows="3" oninput="processInput()" placeholder="यहाँ लिखें..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-pink-500 focus:outline-none text-base"></textarea>
-            </div>
-
-            <!-- Real-time Calculated Result Box -->
-            <div id="liveResultBox" class="bg-amber-50 border border-amber-200 p-3 rounded-xl flex justify-between items-center text-sm font-semibold text-amber-900 hidden">
-                <span id="parsedDescText">--</span>
-                <span id="parsedAmountText" class="text-lg font-bold text-emerald-600">₹0</span>
-            </div>
-
-            <!-- Save Button -->
-            <button onclick="saveCurrentEntry()" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
-                <i class="fa-solid fa-floppy-disk"></i> सेव करें (Save Entry)
-            </button>
         </div>
 
-        <!-- Saved History Feed -->
-        <div class="bg-white/90 backdrop-blur-md p-5 rounded-2xl custom-shadow border border-indigo-100 space-y-4">
-            <div class="flex justify-between items-center">
-                <h2 class="text-lg font-bold text-gray-700 flex items-center gap-2">
-                    <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i> सेव की हुई एंट्रियां (History)
-                </h2>
-                <div class="space-x-2">
-                    <button onclick="downloadPDF()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition"><i class="fa-solid fa-file-pdf"></i> PDF</button>
-                    <button onclick="clearAllHistory()" class="bg-red-100 hover:bg-red-200 text-red-600 px-3 py-1.5 rounded-lg text-xs font-medium transition"><i class="fa-solid fa-trash"></i> साफ़ करें</button>
+        <!-- TOP NET GRAND TOTAL DISPLAY BANNER -->
+        <div class="bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-700 rounded-3xl p-5 text-white shadow-xl relative overflow-hidden border border-white/20">
+            <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+            
+            <div class="text-center relative z-10">
+                <p class="text-xs uppercase font-bold tracking-widest text-indigo-200">Kul Yog / Net Balance</p>
+                <h2 id="netGrandTotalDisplay" class="text-4xl sm:text-5xl font-extrabold text-amber-300 my-1 drop-shadow-md">₹0</h2>
+                
+                <div class="grid grid-cols-2 gap-3 mt-4 pt-3 border-t border-white/15">
+                    <div class="bg-emerald-500/20 backdrop-blur-md rounded-2xl p-2.5 border border-emerald-400/30">
+                        <p class="text-[11px] text-emerald-200 font-medium">Kul Kamai (+)</p>
+                        <p id="topTotalIncomeDisplay" class="text-lg font-bold text-emerald-300">₹0</p>
+                    </div>
+                    <div class="bg-rose-500/20 backdrop-blur-md rounded-2xl p-2.5 border border-rose-400/30">
+                        <p class="text-[11px] text-rose-200 font-medium">Kul Kharcha (-)</p>
+                        <p id="topTotalExpenseDisplay" class="text-lg font-bold text-rose-300">₹0</p>
+                    </div>
                 </div>
             </div>
-
-            <div id="savedEntriesList" class="space-y-3 max-h-96 overflow-y-auto pr-1">
-                <p class="text-center text-gray-400 py-6 text-sm">अभी तक कोई एंट्री सेव नहीं की गई है।</p>
+        </div>
+                <!-- WEEKLY & MONTHLY REPORT CARDS -->
+        <div class="grid grid-cols-2 gap-3">
+            <!-- Sunday to Sunday Report -->
+            <div class="bg-gradient-to-br from-amber-500/10 via-amber-400/5 to-amber-600/10 border border-amber-300/40 rounded-2xl p-3.5 shadow-sm backdrop-blur-md">
+                <div class="flex items-center justify-between text-amber-800 mb-1">
+                    <span class="text-[11px] font-bold uppercase tracking-wider">Sunday to Sunday</span>
+                    <i class="fa-solid fa-calendar-week text-xs"></i>
+                </div>
+                <p id="weeklyReportAmount" class="text-xl font-extrabold text-amber-950">₹0</p>
+                <p class="text-[10px] text-amber-900/70 mt-0.5">is Sunday se pichle Sunday tak</p>
             </div>
 
-            <!-- Grand Total Bar -->
-            <div class="bg-gradient-to-r from-violet-600 to-indigo-600 text-white p-4 rounded-xl flex justify-between items-center shadow-md">
-                <span class="font-semibold">कुल योग (Grand Total):</span>
-                <span id="grandTotalAmount" class="text-2xl font-extrabold text-amber-300">₹0</span>
+            <!-- Monthly 1st to Last Report -->
+            <div class="bg-gradient-to-br from-blue-500/10 via-indigo-400/5 to-cyan-600/10 border border-blue-300/40 rounded-2xl p-3.5 shadow-sm backdrop-blur-md">
+                <div class="flex items-center justify-between text-blue-800 mb-1">
+                    <span class="text-[11px] font-bold uppercase tracking-wider">Mahina (Monthly)</span>
+                    <i class="fa-solid fa-calendar-days text-xs"></i>
+                </div>
+                <p id="monthlyReportAmount" class="text-xl font-extrabold text-blue-950">₹0</p>
+                <p class="text-[10px] text-blue-900/70 mt-0.5">1 Tarikh se Aaj tak</p>
             </div>
         </div>
-    </div>
-        <!-- Settings Modal -->
-    <div id="settingsModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-                    <i class="fa-solid fa-sliders text-violet-600"></i> 15 कस्टमाइज़ेबल रेट सेटिंग्स
+                <!-- NEW ENTRY CARD (Kamai / Kharcha) -->
+        <div class="bg-white/90 backdrop-blur-xl border border-gray-200/80 rounded-3xl p-4 sm:p-5 shadow-xl">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
+                    <span class="w-7 h-7 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-xs">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </span>
+                    Nayi Pravisti (New Entry) Jodein
                 </h3>
-                <button onclick="closeSettings()" class="text-gray-500 hover:text-gray-700 font-bold text-lg"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <p class="text-xs text-gray-500">आप अपनी ज़रूरत के अनुसार आइटम के नाम और उनके प्रति यूनिट रेट सेट कर सकते हैं:</p>
-            
-            <div id="ratesContainer" class="space-y-2">
-                <!-- Dynamically injected via JS -->
+                
+                <!-- Type Toggle: Income vs Expense -->
+                <div class="flex bg-gray-100 p-1 rounded-xl border border-gray-200 text-xs font-semibold">
+                    <button type="button" id="btnTypeIncome" onclick="setEntryType('income')" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white shadow-sm transition">
+                        Kamai (+)
+                    </button>
+                    <button type="button" id="btnTypeExpense" onclick="setEntryType('expense')" class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-gray-800 transition">
+                        Kharcha (-)
+                    </button>
+                </div>
             </div>
 
-            <div class="flex justify-end gap-2 pt-3 border-t">
-                <button onclick="closeSettings()" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-xl text-sm font-medium">रद्द करें</button>
-                <button onclick="saveRates()" class="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-xl text-sm font-medium">बदलाव सेव करें</button>
+            <!-- Media Input Buttons: Direct Camera & Gallery -->
+            <div class="grid grid-cols-2 gap-2 mb-3">
+                <label class="flex items-center justify-center gap-2 py-2.5 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-2xl border border-indigo-200 cursor-pointer text-xs font-semibold transition active:scale-98">
+                    <i class="fa-solid fa-camera text-sm"></i>
+                    <span>Direct Camera</span>
+                    <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="handleImageUpload(event)">
+                </label>
+                
+                <label class="flex items-center justify-center gap-2 py-2.5 px-3 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-2xl border border-purple-200 cursor-pointer text-xs font-semibold transition active:scale-98">
+                    <i class="fa-solid fa-images text-sm"></i>
+                    <span>Gallery Jodein</span>
+                    <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                </label>
+            </div>
+
+            <!-- Image Preview Box (If photo selected) -->
+            <div id="imagePreviewContainer" class="hidden mb-3 relative inline-block">
+                <img id="uploadedImagePreview" src="" class="w-16 h-16 object-cover rounded-xl border-2 border-indigo-500 shadow-sm">
+                <button type="button" onclick="removeUploadedImage()" class="absolute -top-2 -right-2 w-6 h-6 bg-rose-600 text-white rounded-full flex items-center justify-center text-xs shadow-md hover:bg-rose-700">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Text & Rate Calculation Input -->
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">Vivaran Likhein (Uda. 20 diva ya 15 lais):</label>
+                    <textarea id="noteInput" rows="2" placeholder="Yahan likhein..." oninput="calculateLiveTotal()" class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"></textarea>
+                </div>
+
+                <!-- Live Auto-Calculation Result & Save Button -->
+                <div class="flex items-center justify-between bg-indigo-50/60 p-3 rounded-2xl border border-indigo-100">
+                    <div>
+                        <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Live Calculation</p>
+                        <p id="liveCalcResultText" class="text-xs font-bold text-indigo-900 mt-0.5">₹0</p>
+                    </div>
+                    
+                    <button onclick="saveNewEntry()" class="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold text-xs rounded-xl shadow-lg transition active:scale-95 flex items-center gap-1.5">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>Save Entry</span>
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
+                <!-- SAVED HISTORY FEED & FILTER TABS -->
+        <div class="bg-white/90 backdrop-blur-xl border border-gray-200/80 rounded-3xl p-4 sm:p-5 shadow-xl space-y-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-7 h-7 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center text-xs">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </span>
+                    <h3 class="text-sm font-bold text-gray-800">Sev Ki Hui Entriyan (History)</h3>
+                </div>
 
-    <!-- JavaScript Engine -->
+                <div class="flex items-center gap-1.5">
+                    <button onclick="downloadPDF()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold flex items-center gap-1 shadow-sm transition active:scale-95" title="Download PDF">
+                        <i class="fa-solid fa-file-pdf text-amber-400"></i>
+                        <span>PDF</span>
+                    </button>
+                    <button onclick="clearAllHistory()" class="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-xs font-semibold flex items-center gap-1 border border-rose-200 transition active:scale-95" title="Clear History">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>Saaf Karein</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- History Filter Tabs: All / Income Only / Expense Only -->
+            <div class="flex bg-gray-100 p-1 rounded-xl border border-gray-200 text-xs font-semibold">
+                <button onclick="setHistoryFilter('all')" id="filterTabAll" class="flex-1 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition">Sabhi (All)</button>
+                <button onclick="setHistoryFilter('income')" id="filterTabIncome" class="flex-1 py-1.5 rounded-lg text-gray-600 hover:text-gray-800 transition">Kamai (+) Only</button>
+                <button onclick="setHistoryFilter('expense')" id="filterTabExpense" class="flex-1 py-1.5 rounded-lg text-gray-600 hover:text-gray-800 transition">Kharcha (-) Only</button>
+            </div>
+
+            <!-- Entries Container List -->
+            <div id="savedEntriesList" class="space-y-2 max-h-[350px] overflow-y-auto pr-1">
+                <!-- Dynamically Rendered History Items Will Appear Here -->
+                <p class="text-center text-gray-400 py-6 text-sm">Abhi tak koi entry sev nahi ki gayi hai.</p>
+            </div>
+        </div>
+                <!-- IMAGE VIEWER LIGHTBOX MODAL (Zoom & Minimize) -->
+        <div id="imageViewerModal" class="fixed inset-0 bg-black/95 z-50 hidden flex items-center justify-center p-4" onclick="closeImageViewer()">
+            <div class="relative max-w-lg w-full text-center" onclick="event.stopPropagation()">
+                <button onclick="closeImageViewer()" class="absolute -top-12 right-0 text-white text-3xl font-bold p-2 hover:text-amber-400 transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <img id="modalImage" class="w-full max-h-[80vh] object-contain rounded-2xl border-2 border-white/20 shadow-2xl">
+                <p class="text-xs text-gray-400 mt-2">Photo ko band karne ke liye X dabayein ya kahin bhi touch karein.</p>
+            </div>
+        </div>
+
+        <!-- FLOATING RESIZABLE CALCULATOR WIDGET -->
+        <div id="floatingCalculator" class="fixed bottom-4 right-4 z-40 hidden w-72 bg-slate-900/95 backdrop-blur-2xl border border-slate-700 rounded-3xl shadow-2xl p-4 text-white resize overflow-auto min-w-[260px] min-h-[320px] max-w-[95vw] max-h-[90vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3 cursor-move">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-calculator text-amber-400 text-sm"></i>
+                    <span class="text-xs font-bold tracking-wider">ATHAR Calculator</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <button onclick="clearCalcHistory()" class="text-slate-400 hover:text-rose-400 text-xs p-1" title="Clear Calc History">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                    <button onclick="toggleCalculator()" class="text-slate-400 hover:text-white text-xs p-1">
+                        <i class="fa-solid fa-xmark text-base"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Calc Mini History Stream -->
+            <div id="calcHistoryStream" class="text-[10px] text-slate-400 mb-2 h-10 overflow-y-auto px-1 border-b border-slate-800/60 pb-1">
+                History & expressions...
+            </div>
+
+            <!-- Calc Screen -->
+            <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 mb-3 text-right">
+                <div id="calcDisplay" class="text-2xl font-mono font-bold text-amber-300 tracking-wider overflow-x-auto">0</div>
+            </div>
+
+            <!-- Calc Keypad Grid -->
+            <div class="grid grid-cols-4 gap-1.5 text-sm font-semibold">
+                <button onclick="appendCalc('C')" class="p-2.5 bg-rose-500/20 text-rose-300 rounded-xl hover:bg-rose-500/30">C</button>
+                <button onclick="appendCalc('(')" class="p-2.5 bg-slate-800 text-slate-300 rounded-xl hover:bg-slate-700">(</button>
+                <button onclick="appendCalc(')')" class="p-2.5 bg-slate-800 text-slate-300 rounded-xl hover:bg-slate-700">)</button>
+                <button onclick="appendCalc('/')" class="p-2.5 bg-indigo-600/40 text-indigo-300 rounded-xl hover:bg-indigo-600/60">÷</button>
+                
+                <button onclick="appendCalc('7')" class="p-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700">7</button>
+                <button onclick="appendCalc('8')" class="p-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700">8</button>
+                <button onclick="appendCalc('9')" class="p-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700">9</button>
+                <button onclick="appendCalc('*')" class="p-2.5 bg-indigo-600/40 text-indigo-300 rounded-xl hover:bg-indigo-600/60">×</button>
+                
+                <button onclick="appendCalc('4')" class="p-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700">4</button>
+                <button onclick="appendCalc('5')" class="p-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700">5</button>
+                <button onclick="appendCalc('6')" class="p-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700">6</button>
+                <button onclick="appendCalc('-')" class="p-2.5 bg-indigo-600/40 text-indigo-300 rounded-xl hover:bg-indigo-600/60">-</button>
+                
+                <button onclick="appendCalc('1')" class="p-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700">1</button>
+                <button onclick="appendCalc('2')" class="p-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700">2</button>
+                <button onclick="appendCalc('3')" class="p-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700">3</button>
+                <button onclick="appendCalc('+')" class="p-2.5 bg-indigo-600/40 text-indigo-300 rounded-xl hover:bg-indigo-600/60">+</button>
+                
+                <button onclick="appendCalc('0')" class="col-span-2 p-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700">0</button>
+                <button onclick="appendCalc('.')" class="p-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700">.</button>
+                <button onclick="calculateResult()" class="p-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700">=</button>
+            </div>
+        </div>
+                <!-- SETTINGS MODAL (Custom Rates, Past Month/Year Filter, Save Settings) -->
+        <div id="settingsModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 shadow-2xl relative">
+                
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between pb-3 border-b border-gray-100 mb-4 sticky top-0 bg-white z-10">
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-sliders"></i>
+                        </span>
+                        <h3 class="text-base font-bold text-gray-800">Custom Settings & Filters</h3>
+                    </div>
+                    <button onclick="closeSettings()" class="w-8 h-8 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full flex items-center justify-center transition">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- Past Month & Year Filter Selection Section -->
+                <div class="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-2xl border border-indigo-100 mb-5">
+                    <h4 class="text-xs font-bold text-indigo-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-calendar-days text-indigo-600"></i>
+                        Purana Mahina & Saal Filter:
+                    </h4>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] text-gray-500 mb-1 font-semibold">Mahina Chunein:</label>
+                            <select id="filterMonthSelect" class="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500">
+                                <option value="all">Sabhi Mahine (All)</option>
+                                <option value="0">January</option>
+                                <option value="1">February</option>
+                                <option value="2">March</option>
+                                <option value="3">April</option>
+                                <option value="4">May</option>
+                                <option value="5">June</option>
+                                <option value="6">July</option>
+                                <option value="7">August</option>
+                                <option value="8">September</option>
+                                <option value="9">October</option>
+                                <option value="10">November</option>
+                                <option value="11">December</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-gray-500 mb-1 font-semibold">Saal Chunein:</label>
+                            <select id="filterYearSelect" class="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500">
+                                <option value="all">Sabhi Saal (All)</option>
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom 15 Rate Slots Configuration -->
+                <div class="space-y-3 mb-5">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider">Custom Rate Slots (15)</h4>
+                        <span class="text-[10px] text-gray-400">Rate auto-calculate me kaam aayega</span>
+                    </div>
+
+                    <div id="rateSlotsContainer" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+                        <!-- Dynamically generated rate inputs will be injected here -->
+                    </div>
+                </div>
+
+                <!-- Modal Bottom Save Button -->
+                <div class="pt-3 border-t border-gray-100 flex items-center justify-end gap-2 sticky bottom-0 bg-white z-10">
+                    <button onclick="closeSettings()" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-xs rounded-xl transition">Radd Karein</button>
+                    <button onclick="saveSettingsData()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Settings Save Karein</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+            <!-- JAVASCRIPT CORE CODE -->
     <script>
-        // Default 15 Custom Rates Rules
-        let defaultRates = [
-            { name: "lais", rate: 100 },
-            { name: "diva", rate: 80 },
-            { name: "side patti aman", rate: 90 },
-            { name: "side patti diva", rate: 80 },
-            { name: "patti", rate: 50 },
-            { name: "choli", rate: 60 },
-            { name: "border", rate: 120 },
-            { name: "dupatta", rate: 150 },
-            { name: "suit", rate: 250 },
-            { name: "saree", rate: 300 },
-            { name: "lace big", rate: 110 },
-            { name: "patch", rate: 45 },
-            { name: "button", rate: 10 },
-            { name: "thread", rate: 25 },
-            { name: "item 15", rate: 180 }
-        ];
-
-        let rates = JSON.parse(localStorage.getItem('custom_rates')) || defaultRates;
+        // Global App States
+        let currentEntryType = 'income'; // 'income' or 'expense'
+        let currentHistoryFilter = 'all'; // 'all', 'income', 'expense'
+        let uploadedPhotoBase64 = null;
         let savedEntries = JSON.parse(localStorage.getItem('saved_entries')) || [];
-        let currentPhotoBase64 = null;
-        let currentCalculatedValue = { text: "", total: 0 };
-        let calcInputString = "";
+        let calcHistory = JSON.parse(localStorage.getItem('calc_history')) || [];
 
+        // Default 15 Custom Rates
+        let defaultRates = [
+            {name: 'diva', rate: 80},
+            {name: 'lais', rate: 100},
+            {name: 'dhaga', rate: 50},
+            {name: 'moti', rate: 120},
+            {name: 'button', rate: 10},
+            {name: 'kapda', rate: 200},
+            {name: 'border', rate: 150},
+            {name: 'zip', rate: 30},
+            {name: 'lace', rate: 90},
+            {name: 'suit', rate: 500},
+            {name: 'kurti', rate: 250},
+            {name: 'gown', rate: 600},
+            {name: 'shirt', rate: 300},
+            {name: 'jacket', rate: 450},
+            {name: 'palazzo', rate: 220}
+        ];
+        let customRates = JSON.parse(localStorage.getItem('custom_rates')) || defaultRates;
+
+        // Initialize App on Load
         window.onload = function() {
+            startLiveClock();
+            renderRateSlots();
             renderSavedEntries();
-            buildSettingsUI();
-            makeDraggable(document.getElementById("floatingCalculator"));
+            updateTotalsDisplay();
+            updateReports();
         };
 
-        // Toggle Floating Calculator visibility
-        function toggleCalculator() {
-            let box = document.getElementById("calcModalBox");
-            box.classList.toggle("hidden");
+        // Live Real-Time Clock & Date
+        function startLiveClock() {
+            setInterval(() => {
+                let now = new Date();
+                let timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                let dateStr = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+                
+                let clockEl = document.getElementById('liveClockDisplay');
+                let dateEl = document.getElementById('liveDateDisplay');
+                if(clockEl) clockEl.innerText = timeStr;
+                if(dateEl) dateEl.innerText = dateStr;
+            }, 1000);
         }
 
-        // Draggable Feature for Floating Calculator
-        function makeDraggable(elmnt) {
-            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-            let header = document.getElementById("calcHeaderHandle");
-            if (header) {
-                header.onmousedown = dragMouseDown;
-                header.ontouchstart = dragMouseDown;
+        // Toggle Entry Type (Income / Expense)
+        function setEntryType(type) {
+            currentEntryType = type;
+            let btnInc = document.getElementById('btnTypeIncome');
+            let btnExp = document.getElementById('btnTypeExpense');
+
+            if(type === 'income') {
+                btnInc.className = "px-3 py-1.5 rounded-lg bg-emerald-600 text-white shadow-sm transition";
+                btnExp.className = "px-3 py-1.5 rounded-lg text-gray-600 hover:text-gray-800 transition";
             } else {
-                elmnt.onmousedown = dragMouseDown;
-                elmnt.ontouchstart = dragMouseDown;
+                btnExp.className = "px-3 py-1.5 rounded-lg bg-rose-600 text-white shadow-sm transition";
+                btnInc.className = "px-3 py-1.5 rounded-lg text-gray-600 hover:text-gray-800 transition";
             }
-
-            function dragMouseDown(e) {
-                e = e || window.event;
-                e.preventDefault();
-                if (e.type === 'touchstart') {
-                    pos3 = e.touches[0].clientX;
-                    pos4 = e.touches[0].clientY;
-                } else {
-                    pos3 = e.clientX;
-                    pos4 = e.clientY;
-                }
-                document.onmouseup = closeDragElement;
-                document.ontouchend = closeDragElement;
-                document.onmousemove = elementDrag;
-                document.ontouchmove = elementDrag;
-            }
-
-            function elementDrag(e) {
-                e = e || window.event;
-                e.preventDefault();
-                let clientX, clientY;
-                if (e.type === 'touchmove') {
-                    clientX = e.touches[0].clientX;
-                    clientY = e.touches[0].clientY;
-                } else {
-                    clientX = e.clientX;
-                    clientY = e.clientY;
-                }
-                pos1 = pos3 - clientX;
-                pos2 = pos4 - clientY;
-                pos3 = clientX;
-                pos4 = clientY;
-                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-                elmnt.style.bottom = "auto";
-                elmnt.style.right = "auto";
-            }
-
-            function closeDragElement() {
-                document.onmouseup = null;
-                document.ontouchend = null;
-                document.onmousemove = null;
-                document.ontouchmove = null;
-            }
+            calculateLiveTotal();
         }
 
-        // Live Calculator Logic (Auto evaluate)
-        function appendCalc(val) {
-            let display = document.getElementById("calcDisplay");
-            let history = document.getElementById("calcHistory");
-
-            if (val === 'C') {
-                calcInputString = "";
-                display.innerText = "0";
-                history.innerText = "";
-                return;
-            }
-            if (val === '⌫') {
-                calcInputString = calcInputString.slice(0, -1);
-                display.innerText = calcInputString || "0";
-                tryEval();
-                return;
-            }
-            if (val === '=') {
-                tryEval(true);
-                return;
-            }
-
-            calcInputString += val;
-            display.innerText = calcInputString;
-            tryEval();
-        }
-
-        function tryEval(isEquals = false) {
-            try {
-                if(!calcInputString) return;
-                let sanitized = calcInputString.replace(/[^0-9+\-*/().]/g, '');
-                let res = Function('"use strict"; return (' + sanitized + ')')();
-                if(res !== undefined && !isNaN(res)) {
-                    document.getElementById("calcDisplay").innerText = res;
-                    if(isEquals) {
-                        document.getElementById("calcHistory").innerText = calcInputString + " = " + res;
-                        calcInputString = res.toString();
-                    }
-                }
-            } catch(e) {}
-        }
-
-        // Photo Handler with Compression
-        function previewImage(event) {
+        // Image Handling (Camera / Gallery)
+        function handleImageUpload(event) {
             let file = event.target.files[0];
             if(file) {
                 let reader = new FileReader();
                 reader.onload = function(e) {
-                    let img = new Image();
-                    img.onload = function() {
-                        let canvas = document.createElement('canvas');
-                        let ctx = canvas.getContext('2d');
-                        let maxWidth = 400;
-                        let scale = maxWidth / img.width;
-                        canvas.width = maxWidth;
-                        canvas.height = img.height * scale;
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.6);
-
-                        document.getElementById("photoPreview").src = currentPhotoBase64;
-                        document.getElementById("photoPreviewContainer").classList.remove("hidden");
-                    };
-                    img.src = e.target.result;
+                    uploadedPhotoBase64 = e.target.result;
+                    let previewImg = document.getElementById('uploadedImagePreview');
+                    let previewContainer = document.getElementById('imagePreviewContainer');
+                    previewImg.src = uploadedPhotoBase64;
+                    previewContainer.classList.remove('hidden');
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        function removePhoto() {
-            currentPhotoBase64 = null;
-            document.getElementById("itemPhoto").value = "";
-            document.getElementById("photoPreviewContainer").classList.add("hidden");
+        function removeUploadedImage() {
+            uploadedPhotoBase64 = null;
+            document.getElementById('imagePreviewContainer').classList.add('hidden');
+            document.getElementById('cameraInput').value = '';
+            document.getElementById('galleryInput').value = '';
         }
 
-        // Parser & Auto Calculator Engine
-        function processInput() {
-            let val = document.getElementById("noteInput").value.trim().toLowerCase();
-            let resultBox = document.getElementById("liveResultBox");
+        // Live Auto Calculation based on Custom Rates
+        function calculateLiveTotal() {
+            let text = document.getElementById('noteInput').value.trim();
+            let resultEl = document.getElementById('liveCalcResultText');
             
-            if(!val) {
-                resultBox.classList.add("hidden");
-                currentCalculatedValue = { text: "", total: 0 };
-                return;
+            if(!text) {
+                resultEl.innerText = "₹0";
+                return 0;
             }
 
-            let lines = val.split('\n');
-            let grandLineTotal = 0;
-            let sortedRates = [...rates].sort((a,b) => b.name.length - a.name.length);
-            let parsedLinesText = [];
+            let total = 0;
+            let calcBreakdowns = [];
+            let lines = text.split('\n');
 
             lines.forEach(line => {
-                let cleanLine = line.trim();
-                if(!cleanLine) return;
+                let lowerLine = line.toLowerCase();
+                let matched = false;
 
-                let matchedRate = 0;
-                for(let r of sortedRates) {
-                    if(cleanLine.includes(r.name.toLowerCase())) {
-                        matchedRate = r.rate;
-                        break;
+                customRates.forEach(r => {
+                    if(lowerLine.includes(r.name)) {
+                        // Extract numbers from the line
+                        let nums = line.replace(/[^0-9]/g, ' ');
+                        let qty = parseInt(nums) || 1;
+                        let lineAmt = qty * r.rate;
+                        total += lineAmt;
+                        calcBreakdowns.push(`${qty}×₹${r.rate}=₹${lineAmt}`);
+                        matched = true;
                     }
-                }
+                });
 
-                let numberMatch = cleanLine.match(/\d+/);
-                let qty = numberMatch ? parseInt(numberMatch[0]) : 1;
-
-                if(matchedRate > 0) {
-                    let total = qty * matchedRate;
-                    grandLineTotal += total;
-                    parsedLinesText.push(`${cleanLine} (${qty}×₹${matchedRate} = ₹${total})`);
-                } else {
-                    parsedLinesText.push(cleanLine);
+                if(!matched) {
+                    // Try to parse direct math or simple number
+                    let pureNum = parseFloat(line.replace(/[^0-9.]/g, '')) || 0;
+                    if(pureNum > 0) {
+                        total += pureNum;
+                        calcBreakdowns.push(`₹${pureNum}`);
+                    }
                 }
             });
 
-            if(grandLineTotal > 0) {
-                currentCalculatedValue = { text: parsedLinesText.join(" | "), total: grandLineTotal };
-                document.getElementById("parsedDescText").innerText = `आइटम: "${val}"`;
-                document.getElementById("parsedAmountText").innerText = "₹" + grandLineTotal;
-                resultBox.classList.remove("hidden");
-            } else {
-                currentCalculatedValue = { text: val, total: 0 };
-                document.getElementById("parsedDescText").innerText = val;
-                document.getElementById("parsedAmountText").innerText = "₹0";
-                resultBox.classList.remove("hidden");
+            let prefix = currentEntryType === 'expense' ? 'Kharcha (-)' : 'Kamai (+)';
+            resultEl.innerText = `${prefix}: ₹${total} (${calcBreakdowns.join(', ') || 'Direct'})`;
+            return total;
+        }
+                <!-- SAVE NEW ENTRY LOGIC -->
+        function saveNewEntry() {
+            let text = document.getElementById('noteInput').value.trim();
+            let amount = calculateLiveTotal();
+
+            if(!text && amount === 0) {
+                alert("Kripya kuch vivaran ya amount darj karein!");
+                return;
+            }
+
+            let now = new Date();
+            let newEntry = {
+                id: 'entry_' + Date.now(),
+                type: currentEntryType,
+                text: text || (currentEntryType === 'expense' ? 'Kharcha Entry' : 'Kamai Entry'),
+                amount: amount,
+                time: now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+                date: now.toISOString().split('T')[0], // YYYY-MM-DD
+                timestamp: now.getTime(),
+                photo: uploadedPhotoBase64,
+                calcText: document.getElementById('liveCalcResultText').innerText
+            };
+
+            savedEntries.unshift(newEntry);
+            localStorage.setItem('saved_entries', JSON.stringify(savedEntries));
+
+            // Reset Form
+            document.getElementById('noteInput').value = '';
+            removeUploadedImage();
+            document.getElementById('liveCalcResultText').innerText = "₹0";
+
+            // Re-render UI
+            renderSavedEntries();
+            updateTotalsDisplay();
+            updateReports();
+        }
+
+        // Delete Individual Entry
+        function deleteEntry(id) {
+            savedEntries = savedEntries.filter(item => item.id !== id);
+            localStorage.setItem('saved_entries', JSON.stringify(savedEntries));
+            renderSavedEntries();
+            updateTotalsDisplay();
+            updateReports();
+        }
+
+        // Clear All History
+        function clearAllHistory() {
+            if(confirm("Kya aap saari history saaf karna chahte hain?")) {
+                savedEntries = [];
+                localStorage.removeItem('saved_entries');
+                renderSavedEntries();
+                updateTotalsDisplay();
+                updateReports();
             }
         }
 
-        // Save Entry Function
-        function saveCurrentEntry() {
-            let noteText = document.getElementById("noteInput").value.trim();
-            if(!noteText && !currentPhotoBase64) {
-                alert("कृपया कुछ लिखें या फोटो जोड़ें!");
-                return;
-            }
+        // Filter History Tabs
+        function setHistoryFilter(filter) {
+            currentHistoryFilter = filter;
+            let tabAll = document.getElementById('filterTabAll');
+            let tabInc = document.getElementById('filterTabIncome');
+            let tabExp = document.getElementById('filterTabExpense');
 
-            let entry = {
-                id: Date.now() + Math.random(),
-                text: noteText || "फोटो एंट्री",
-                photo: currentPhotoBase64,
-                calcText: currentCalculatedValue.text,
-                amount: currentCalculatedValue.total || 0,
-                time: new Date().toLocaleTimeString('hi-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-            };
+            tabAll.className = "flex-1 py-1.5 rounded-lg text-gray-600 hover:text-gray-800 transition";
+            tabInc.className = "flex-1 py-1.5 rounded-lg text-gray-600 hover:text-gray-800 transition";
+            tabExp.className = "flex-1 py-1.5 rounded-lg text-gray-600 hover:text-gray-800 transition";
 
-            try {
-                let existingEntries = JSON.parse(localStorage.getItem('saved_entries')) || [];
-                existingEntries.push(entry);
-                savedEntries = existingEntries;
-                localStorage.setItem('saved_entries', JSON.stringify(savedEntries));
-            } catch(e) {
-                alert("लोकल स्टोरेज फुल हो गया है!");
-                return;
-            }
-
-            document.getElementById("noteInput").value = "";
-            removePhoto();
-            document.getElementById("liveResultBox").classList.add("hidden");
-            currentCalculatedValue = { text: "", total: 0 };
+            if(filter === 'all') tabAll.className = "flex-1 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition";
+            else if(filter === 'income') tabInc.className = "flex-1 py-1.5 rounded-lg bg-emerald-600 text-white shadow-sm transition";
+            else if(filter === 'expense') tabExp.className = "flex-1 py-1.5 rounded-lg bg-rose-600 text-white shadow-sm transition";
 
             renderSavedEntries();
         }
 
-                        // Render Saved Entries List (Grand Total Fix)
+        // Render Saved Entries List with Past Month/Year Filters
         function renderSavedEntries() {
-            savedEntries = JSON.parse(localStorage.getItem('saved_entries')) || [];
             let container = document.getElementById("savedEntriesList");
-            let grandTotalEl = document.getElementById("grandTotalAmount");
+            let fMonth = document.getElementById('filterMonthSelect') ? document.getElementById('filterMonthSelect').value : 'all';
+            let fYear = document.getElementById('filterYearSelect') ? document.getElementById('filterYearSelect').value : 'all';
 
-            if(savedEntries.length === 0) {
-                container.innerHTML = `<p class="text-center text-gray-400 py-6 text-sm">अभी तक कोई एंट्री सेव नहीं की गई है।</p>`;
-                grandTotalEl.innerText = "₹0";
+            // Filter by Tab & Month/Year
+            let filtered = savedEntries.filter(item => {
+                // Tab Filter
+                if(currentHistoryFilter === 'income' && item.type !== 'income') return false;
+                if(currentHistoryFilter === 'expense' && item.type !== 'expense') return false;
+
+                // Month / Year Filter
+                if(item.date) {
+                    let d = new Date(item.date);
+                    if(fMonth !== 'all' && d.getMonth() !== parseInt(fMonth)) return false;
+                    if(fYear !== 'all' && d.getFullYear().toString() !== fYear) return false;
+                }
+                return true;
+            });
+
+            if(filtered.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-400 py-6 text-sm">Koi entry nahi mili.</p>`;
                 return;
             }
 
             let html = "";
-            let grandTotal = 0;
-
-            savedEntries.forEach((item, index) => {
-                let amt = parseFloat(item.amount) || 0;
-                grandTotal += amt;
+            filtered.forEach((item, index) => {
+                let isExp = item.type === 'expense';
+                let amtColor = isExp ? 'text-rose-600' : 'text-emerald-600';
+                let sign = isExp ? '-' : '+';
+                let badgeBg = isExp ? 'bg-rose-100 text-rose-600' : 'bg-indigo-100 text-indigo-500';
 
                 html += `
-                    <div class="bg-gradient-to-r from-gray-50 to-indigo-50/40 p-3.5 rounded-xl border border-gray-200 flex items-center justify-between gap-3 shadow-sm mb-2">
+                    <div class="bg-gradient-to-r from-gray-50 to-indigo-50/40 p-3.5 rounded-2xl border border-gray-200 flex items-center justify-between gap-3 shadow-sm mb-2">
                         <div class="flex items-center gap-3">
-                            ${item.photo ? `<img src="${item.photo}" class="w-12 h-12 object-cover rounded-lg border shadow-xs cursor-pointer hover:opacity-80 transition" onclick="openImageViewer('${item.photo}')">` : `<div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-500 text-xs font-bold">नोट</div>`}
+                            ${item.photo ? `<img src="${item.photo}" class="w-12 h-12 object-cover rounded-xl border shadow-xs cursor-pointer hover:opacity-80 transition" onclick="openImageViewer('${item.photo}')">` : `<div class="w-12 h-12 ${badgeBg} rounded-xl flex items-center justify-center text-xs font-bold">${isExp ? 'खर्चा' : 'नोट'}</div>`}
                             <div>
-                                <p class="text-xs text-gray-400">#${index + 1} • ${item.time}</p>
-                                <p class="text-sm font-semibold text-gray-800 whitespace-pre-line">${item.text}</p>
-                                <p class="text-xs text-indigo-600 font-medium">${item.calcText || ''}</p>
+                                <p class="text-[10px] text-gray-400">#${index + 1} • ${item.date || ''} ${item.time}</p>
+                                <p class="text-xs font-semibold text-gray-800 whitespace-pre-line">${item.text}</p>
+                                <p class="text-[11px] text-indigo-600 font-medium">${item.calcText || ''}</p>
                             </div>
                         </div>
                         <div class="text-right flex items-center gap-3">
                             <div>
-                                <span class="text-base font-bold text-emerald-600">₹${amt}</span>
+                                <span class="text-sm font-bold ${amtColor}">${sign}₹${item.amount}</span>
                             </div>
-                            <button onclick="deleteEntry('${item.id}')" class="text-red-400 hover:text-red-600 p-1 text-sm"><i class="fa-solid fa-trash-can"></i></button>
+                            <button onclick="deleteEntry('${item.id}')" class="text-rose-400 hover:text-rose-600 p-1 text-xs"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
                     </div>
                 `;
             });
-
             container.innerHTML = html;
-            grandTotalEl.innerText = "₹" + grandTotal;
-        }
-        
-
-        // Open Image in Large View Modal with Close option
-        function openImageViewer(imgSrc) {
-            let modal = document.getElementById("imageViewerModal");
-            if (!modal) {
-                let modalHtml = `
-                    <div id="imageViewerModal" class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 hidden" onclick="closeImageViewer()">
-                        <div class="relative max-w-lg w-full text-center" onclick="event.stopPropagation()">
-                            <button onclick="closeImageViewer()" class="absolute -top-12 right-0 text-white text-3xl font-bold bg-gray-800/80 w-10 h-10 rounded-full flex items-center justify-center shadow-lg">&times;</button>
-                            <img id="modalImage" class="w-full max-h-[80vh] object-contain rounded-xl border border-white/20 shadow-2xl cursor-pointer" onclick="closeImageViewer()" title="Click to close">
-                        </div>
-                    </div>
-                `;
-                document.body.insertAdjacentHTML('beforeend', modalHtml);
-                modal = document.getElementById("imageViewerModal");
-            }
-            document.getElementById("modalImage").src = imgSrc;
-            modal.classList.remove("hidden");
         }
 
+        // Update Totals (Net Total = Income - Expense)
+        function updateTotalsDisplay() {
+            let totalInc = 0;
+            let totalExp = 0;
+
+            savedEntries.forEach(item => {
+                let amt = Number(item.amount) || 0;
+                if(item.type === 'expense') totalExp += amt;
+                else totalInc += amt;
+            });
+
+            let netTotal = totalInc - totalExp;
+
+            document.getElementById('netGrandTotalDisplay').innerText = (netTotal < 0 ? '-₹' + Math.abs(netTotal) : '₹' + netTotal);
+            document.getElementById('topTotalIncomeDisplay').innerText = '₹' + totalInc;
+            document.getElementById('topTotalExpenseDisplay').innerText = '₹' + totalExp;
+        }
+
+        // Update Sunday-to-Sunday & Monthly Reports
+        function updateReports() {
+            let now = new Date();
+            let currentDay = now.getDay(); // 0 is Sunday
+            
+            // Calculate this Sunday start date
+            let sunday = new Date(now);
+            sunday.setDate(now.getDate() - currentDay);
+            sunday.setHours(0, 0, 0, 0);
+
+            // Calculate Monthly 1st date
+            let monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+            let weeklySum = 0;
+            let monthlySum = 0;
+
+            savedEntries.forEach(item => {
+                if(!item.timestamp) return;
+                let itemDate = new Date(item.timestamp);
+                let amt = Number(item.amount) || 0;
+                let multiplier = item.type === 'expense' ? -1 : 1;
+
+                if(itemDate >= sunday) {
+                    weeklySum += (amt * multiplier);
+                }
+                if(itemDate >= monthStart) {
+                    monthlySum += (amt * multiplier);
+                }
+            });
+
+            document.getElementById('weeklyReportAmount').innerText = (weeklySum < 0 ? '-₹' + Math.abs(weeklySum) : '₹' + weeklySum);
+            document.getElementById('monthlyReportAmount').innerText = (monthlySum < 0 ? '-₹' + Math.abs(monthlySum) : '₹' + monthlySum);
+        }
+
+        // Image Zoom Lightbox
+        function openImageViewer(src) {
+            document.getElementById('modalImage').src = src;
+            document.getElementById('imageViewerModal').classList.remove('hidden');
+        }
         function closeImageViewer() {
-            let modal = document.getElementById("imageViewerModal");
-            if (modal) {
-                modal.classList.add("hidden");
+            document.getElementById('imageViewerModal').classList.add('hidden');
+        }
+
+        // Calculator Toggle & Functions
+        function toggleCalculator() {
+            let calc = document.getElementById('floatingCalculator');
+            calc.classList.toggle('hidden');
+        }
+
+        function appendCalc(val) {
+            let disp = document.getElementById('calcDisplay');
+            if(val === 'C') {
+                disp.innerText = '0';
+                return;
+            }
+            if(disp.innerText === '0') {
+                disp.innerText = val;
+            } else {
+                disp.innerText += val;
             }
         }
-        
 
-        function deleteEntry(id) {
-            savedEntries = savedEntries.filter(e => e.id != id);
-            localStorage.setItem('saved_entries', JSON.stringify(savedEntries));
-            renderSavedEntries();
-        }
-
-        function clearAllHistory() {
-            if(confirm("क्या आप सारी सेव की हुई एंट्रियां साफ़ करना चाहते हैं?")) {
-                savedEntries = [];
-                localStorage.removeItem('saved_entries');
-                renderSavedEntries();
+        function calculateResult() {
+            let disp = document.getElementById('calcDisplay');
+            let stream = document.getElementById('calcHistoryStream');
+            try {
+                let expr = disp.innerText;
+                let res = eval(expr);
+                stream.innerHTML = `<div>${expr} = ${res}</div>` + stream.innerHTML;
+                disp.innerText = res;
+            } catch(e) {
+                disp.innerText = 'Error';
             }
         }
 
-        // Settings Modal Management
+        function clearCalcHistory() {
+            document.getElementById('calcHistoryStream').innerHTML = 'History cleared.';
+        }
+
+        // Settings Modal Open / Close & Rate Slots Render
         function openSettings() {
-            document.getElementById("settingsModal").classList.remove("hidden");
+            document.getElementById('settingsModal').classList.remove('hidden');
+            renderRateSlots();
         }
-
         function closeSettings() {
-            document.getElementById("settingsModal").classList.add("hidden");
+            document.getElementById('settingsModal').classList.add('hidden');
+            renderSavedEntries();
+            updateTotalsDisplay();
+            updateReports();
         }
-
-        function buildSettingsUI() {
-            let container = document.getElementById("ratesContainer");
-            let html = "";
-            rates.forEach((r, i) => {
+        function renderRateSlots() {
+            let container = document.getElementById('rateSlotsContainer');
+            let html = '';
+            customRates.forEach((r, idx) => {
                 html += `
-                    <div class="flex gap-2 items-center">
-                        <input type="text" id="rate_name_${i}" value="${r.name}" placeholder="आइटम नाम" class="flex-1 px-3 py-1.5 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-violet-500">
-                        <input type="number" id="rate_val_${i}" value="${r.rate}" placeholder="रेट (₹)" class="w-24 px-3 py-1.5 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-violet-500">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-gray-400 w-5">${idx + 1}.</span>
+                        <input type="text" id="rateName_${idx}" value="${r.name}" class="flex-1 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium">
+                        <input type="number" id="rateVal_${idx}" value="${r.rate}" class="w-24 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium">
                     </div>
                 `;
             });
             container.innerHTML = html;
         }
 
-        function saveRates() {
-            for(let i=0; i<rates.length; i++) {
-                let name = document.getElementById(`rate_name_${i}`).value.trim().toLowerCase();
-                let rate = parseFloat(document.getElementById(`rate_val_${i}`).value) || 0;
-                rates[i] = { name, rate };
+        function saveSettingsData() {
+            for(let i = 0; i < customRates.length; i++) {
+                let nameEl = document.getElementById(`rateName_${i}`);
+                let valEl = document.getElementById(`rateVal_${i}`);
+                if(nameEl && valEl) {
+                    customRates[i].name = nameEl.value.trim().toLowerCase();
+                    customRates[i].rate = parseFloat(valEl.value) || 0;
+                }
             }
-            localStorage.setItem('custom_rates', JSON.stringify(rates));
+            localStorage.setItem('custom_rates', JSON.stringify(customRates));
+            alert("Settings aur Custom Rates safalpurvak save ho gaye hain!");
             closeSettings();
-            alert("रेट सेटिंग्स सफलतापूर्वक सेव हो गई हैं!");
         }
 
-        // PDF Download Function
+        // PDF Export
         function downloadPDF() {
-            const element = document.querySelector('.max-w-2xl');
+            let element = document.getElementById('appContainer');
             let opt = {
-                margin:       0.5,
-                filename:     'Smart_Notebook_Report.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+                margin: 0.5,
+                filename: 'ATHAR_Notebook_Report.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
             html2pdf().from(element).set(opt).save();
         }
     </script>
 </body>
 </html>
+        
