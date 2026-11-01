@@ -373,13 +373,24 @@
         let currentEntryType = 'income';
         let currentHistoryFilter = 'all';
         let uploadedPhotoBase64 = null;
-        let customRates = [
-            { name: 'diva', rate: 50 },
-            { name: 'lais', rate: 30 },
-            { name: 'kurti', rate: 100 },
-            { name: 'gown', rate: 250 }
+                let customRates = [
+            { name: "diva", rate: 50 },
+            { name: "lais", rate: 30 },
+            { name: "kurti", rate: 100 },
+            { name: "gown", rate: 250 },
+            { name: "shirt", rate: 120 },
+            { name: "jacket", rate: 300 },
+            { name: "palazzo", rate: 90 },
+            { name: "anarkali", rate: 350 },
+            { name: "blouse", rate: 80 },
+            { name: "top", rate: 70 },
+            { name: "jeans", rate: 150 },
+            { name: "suit", rate: 400 },
+            { name: "dupatta", rate: 40 },
+            { name: "salwar", rate: 110 },
+            { name: "coat", rate: 500 }
         ];
-
+            
         function handleImageUpload(event) {
             let file = event.target.files[0];
             if(file) {
@@ -862,6 +873,28 @@
             updateDashboardTotals();
             renderHistoryFeed();
         };
+                <!-- PHOTO ZOOM / LIGHTBOX MODAL -->
+    <div id="photoZoomModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4" onclick="closePhotoZoom()">
+        <div class="relative max-w-2xl max-h-[90vh]" onclick="event.stopPropagation()">
+            <button onclick="closePhotoZoom()" class="absolute -top-10 right-0 text-white hover:text-gray-300 text-2xl font-bold p-2"><i class="fa-solid fa-xmark"></i></button>
+            <img id="zoomedImagePreview" src="" class="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl border-2 border-white/20">
+        </div>
+    </div>
+              // Photo Zoom Modal Functions
+        function openPhotoZoom(imgSrc) {
+            let modal = document.getElementById('photoZoomModal');
+            let modalImg = document.getElementById('zoomedImagePreview');
+            if(modal && modalImg) {
+                modalImg.src = imgSrc;
+                modal.classList.remove('hidden');
+            }
+        }
+
+        function closePhotoZoom() {
+            let modal = document.getElementById('photoZoomModal');
+            if(modal) modal.classList.add('hidden');
+        }
+      
     </script>
 </body>
 </html>
