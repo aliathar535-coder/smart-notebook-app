@@ -3,91 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATHAR - Smart Notebook & Custom Style Calculator</title>
-    <!-- Tailwind CSS -->
+    <title>ATHAR Smart Notebook</title>
+    <!-- Tailwind CSS & FontAwesome -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Teko:wght@600&family=Rozha+One&family=Caveat:wght@700&display=swap" rel="stylesheet">
-    <!-- html2pdf -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Caveat:wght@600&family=Teko:wght@600&family=Rozha+One&display=swap" rel="stylesheet">
+    <!-- html2pdf for PDF export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        body { font-family: 'Poppins', sans-serif; transition: all 0.3s ease; }
-        .open-book-bg {
-            background: linear-gradient(135deg, #fdfbfb 0%, #f3e7e9 100%);
-            border-radius: 24px;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.08), 0 10px 25px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        .custom-box-wrapper { position: relative; transition: all 0.3s ease; }
+        .custom-box-wrapper { position: relative; }
         .box-style-btn {
             position: absolute;
-            top: 8px;
-            right: 8px;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: inherit;
             width: 28px;
             height: 28px;
-            background: rgba(0,0,0,0.25);
-            backdrop-filter: blur(4px);
-            color: #fff;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 11px;
             cursor: pointer;
-            z-index: 20;
-            transition: transform 0.2s;
+            opacity: 0.7;
+            transition: all 0.2s;
+            z-index: 10;
         }
-        .box-style-btn:hover { transform: scale(1.15); background: rgba(0,0,0,0.45); }
-        .drag-handle { cursor: move; touch-action: none; }
+        .box-style-btn:hover { opacity: 1; transform: scale(1.1); }
     </style>
 </head>
-<body id="appBody" class="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 min-h-screen p-2 sm:p-4 text-gray-800 pb-28">
-    <div id="appContainer" class="max-w-2xl mx-auto space-y-4">
-                <!-- OPEN BOOK HEADER WITH EDITABLE NAME & STYLE BUTTON -->
-        <div id="headerBox" class="open-book-bg p-4 sm:p-5 border-4 border-amber-300/70 overflow-hidden shadow-2xl relative custom-box-wrapper">
-            <!-- Per-Box Style Button -->
-            <button onclick="openBoxStyleModal('headerBox')" class="box-style-btn" title="Edit Header Style">
+<body id="appBody" class="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 min-h-screen p-2 sm:p-4 text-gray-800 pb-28 font-['Poppins']">
+    <div id="appContainer" class="max-w-md mx-auto space-y-3.5">
+                <!-- TOP BRANDING & HEADER SECTION -->
+        <div id="headerBrandingCard" class="bg-white/95 backdrop-blur-xl border border-white/20 rounded-3xl p-4 shadow-xl flex items-center justify-between transition-all duration-300 custom-box-wrapper">
+            <button onclick="openBoxStyleModal('headerBrandingCard')" class="box-style-btn" title="Edit Header Style">
                 <i class="fa-solid fa-palette"></i>
             </button>
-            <div class="open-book-spine hidden sm:block"></div>
-            
-            <div class="flex items-center justify-between relative z-10 gap-2">
-                <!-- Book Left Page: Editable Title, Live Clock & Date -->
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-tr from-amber-600 to-amber-800 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg border border-amber-300/40">
-                        <i class="fa-solid fa-book-open"></i>
-                    </div>
-                    <div>
-                        <!-- Editable App Title / Name -->
-                        <div class="flex items-center gap-2">
-                            <h1 id="editableAppTitle" contenteditable="true" onblur="saveCustomHeaderName()" class="text-xl sm:text-2xl font-black text-amber-950 tracking-wider outline-none border-b border-dashed border-amber-800/40 px-1" title="Click karke naam badlein">ATHAR</h1> 
-                            <span class="text-[10px] bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-full border border-amber-400">NOTEBOOK</span>
-                        </div>
-                        <p class="text-xs font-semibold text-slate-700 flex items-center gap-1.5 mt-0.5">
-                            <i class="fa-regular fa-clock text-indigo-700"></i>
-                            <span id="liveClockDisplay">--:--:--</span>
-                            <span>•</span>
-                            <span id="liveDateDisplay">-- --- ----</span>
-                        </p>
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-gradient-to-tr from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-orange-500/30">
+                    <i class="fa-solid fa-book-open text-lg"></i>
+                </div>
+                <div>
+                    <h1 id="editableAppTitle" contenteditable="true" onblur="saveCustomHeaderName()" class="text-base font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent outline-none cursor-pointer" title="Click karke naam badlein">ATHAR</h1>
+                    <div class="flex items-center gap-2 text-[11px] text-gray-500 font-medium">
+                        <span id="liveClockDisplay">--:--:--</span>
+                        <span>•</span>
+                        <span id="liveDateDisplay">-- -- ----</span>
                     </div>
                 </div>
+            </div>
 
-                <!-- Top Right Icons: Mini Calc Toggle & Settings -->
-                <div class="flex items-center gap-2">
-                    <button onclick="toggleCalculator()" class="w-10 h-10 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl flex items-center justify-center shadow-lg transition active:scale-95" title="Calculator">
-                        <i class="fa-solid fa-calculator text-lg"></i>
-                    </button>
-                    <button onclick="openSettings()" class="w-10 h-10 bg-slate-800 hover:bg-slate-900 text-white rounded-xl flex items-center justify-center shadow-lg transition active:scale-95" title="Settings">
-                        <i class="fa-solid fa-sliders text-lg"></i>
-                    </button>
-                </div>
+            <div class="flex items-center gap-1.5 mr-6">
+                <button onclick="toggleCalculator()" class="w-9 h-9 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-sm shadow-sm transition" title="Calculator">
+                    <i class="fa-solid fa-calculator"></i>
+                </button>
+                <button onclick="openSettings()" class="w-9 h-9 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl flex items-center justify-center text-sm shadow-sm transition" title="Settings">
+                    <i class="fa-solid fa-sliders"></i>
+                </button>
             </div>
         </div>
                 <!-- TOP NET GRAND TOTAL DISPLAY BANNER WITH STYLE BUTTON -->
         <div id="grandTotalCard" class="bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-700 rounded-3xl p-5 text-white shadow-xl relative overflow-hidden border border-white/20 transition-all duration-300 custom-box-wrapper">
-            <!-- Per-Box Style Button -->
             <button onclick="openBoxStyleModal('grandTotalCard')" class="box-style-btn" title="Edit Grand Total Style">
                 <i class="fa-solid fa-palette"></i>
             </button>
@@ -201,7 +181,6 @@
         </div>
                 <!-- SAVED ENTRIES HISTORY FEED CARD WITH STYLE BUTTON -->
         <div id="historyFeedCard" class="bg-white/90 backdrop-blur-xl border border-gray-200/80 rounded-3xl p-4 sm:p-5 shadow-xl space-y-3 transition-all duration-300 custom-box-wrapper">
-            <!-- Per-Box Style Button -->
             <button onclick="openBoxStyleModal('historyFeedCard')" class="box-style-btn" title="Edit History Feed Style">
                 <i class="fa-solid fa-palette"></i>
             </button>
@@ -224,7 +203,7 @@
                 </div>
             </div>
 
-            <!-- History Filter Tabs (All, Kamai, Kharcha) -->
+            <!-- History Filter Tabs -->
             <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-semibold text-center">
                 <button onclick="setHistoryFilter('all')" id="filterTabAll" class="flex-1 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition">Sabhi (All)</button>
                 <button onclick="setHistoryFilter('income')" id="filterTabIncome" class="flex-1 py-1.5 rounded-lg text-gray-600 hover:text-gray-800 transition">Kamai (+)</button>
@@ -232,25 +211,20 @@
             </div>
 
             <!-- Dynamic Entries Container -->
-            <div id="savedEntriesList" class="space-y-2.5 max-h-96 overflow-y-auto pr-1">
-                <!-- Entries JS dwara inject hongi -->
-            </div>
+            <div id="savedEntriesList" class="space-y-2.5 max-h-96 overflow-y-auto pr-1"></div>
         </div>
     </div>
         <!-- FLOATING & RESIZABLE CALCULATOR MODAL -->
     <div id="floatingCalculator" class="hidden fixed top-20 right-4 w-72 bg-white/95 backdrop-blur-xl border border-gray-200/90 rounded-3xl shadow-2xl z-50 overflow-hidden">
-        <!-- Drag Handle Header -->
         <div id="calcDragHeader" class="drag-handle bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3.5 py-2.5 flex items-center justify-between text-xs font-bold cursor-move">
             <span class="flex items-center gap-1.5"><i class="fa-solid fa-calculator"></i> Title Calculator</span>
             <button onclick="toggleCalculator()" class="text-white hover:text-gray-200"><i class="fa-solid fa-xmark text-sm"></i></button>
         </div>
 
-        <!-- Calculator Display Screen -->
         <div class="p-3 bg-gray-50 border-b border-gray-100 text-right">
             <div id="calcDisplay" class="text-2xl font-black text-gray-800 tracking-wider overflow-x-auto">0</div>
         </div>
 
-        <!-- Calculator Keypad Grid -->
         <div class="p-3 grid grid-cols-4 gap-1.5">
             <button onclick="appendCalc('C')" class="p-2.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-xl font-bold text-xs transition">C</button>
             <button onclick="appendCalc('(')" class="p-2.5 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl font-bold text-xs transition">(</button>
@@ -277,7 +251,6 @@
             <button onclick="calculateResult()" class="p-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs transition">=</button>
         </div>
 
-        <!-- Calculator History Stream -->
         <div class="px-3 pb-3 border-t border-gray-100">
             <div class="flex items-center justify-between text-[10px] text-gray-400 py-1">
                 <span>Calc History</span>
@@ -288,7 +261,7 @@
     </div>
         <!-- PER-BOX STYLE & COLOR SHADING CUSTOMIZATION MODAL -->
     <div id="boxStyleModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4 animate-scaleUp">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
             <div class="flex items-center justify-between pb-2 border-b border-gray-100">
                 <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
                     <i class="fa-solid fa-palette text-indigo-600"></i>
@@ -297,7 +270,6 @@
                 <button onclick="closeBoxStyleModal()" class="text-gray-400 hover:text-gray-600 text-sm"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <!-- Shading / Gradient Blend Type -->
             <div>
                 <label class="block text-[11px] font-bold text-gray-500 mb-1">Color Shading / Gradient Mix Type:</label>
                 <select id="boxGradientType" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold outline-none">
@@ -308,7 +280,6 @@
                 </select>
             </div>
 
-            <!-- Color Pickers (Color 1 & Color 2 for Shading) -->
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-[11px] font-bold text-gray-500 mb-1">Primary Color:</label>
@@ -326,7 +297,6 @@
                 </div>
             </div>
 
-            <!-- Text Color & Font Family Options -->
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-[11px] font-bold text-gray-500 mb-1">Text Color:</label>
@@ -343,19 +313,17 @@
                 </div>
             </div>
 
-            <!-- Box Resize / Padding & Opacity Controls -->
             <div class="space-y-2">
                 <div>
-                    <label class="block text-[11px] font-bold text-gray-500 mb-1">Box Padding / Size (<span id="paddingValText">16</span>px):</label>
+                    <label class="block text-[11px] font-bold text-gray-500 mb-1">Box Padding / Size:</label>
                     <input type="range" id="boxPaddingRange" min="10" max="32" value="16" class="w-full accent-indigo-600">
                 </div>
                 <div>
-                    <label class="block text-[11px] font-bold text-gray-500 mb-1">Background Opacity (<span id="opacityValText">95</span>%):</label>
+                    <label class="block text-[11px] font-bold text-gray-500 mb-1">Background Opacity:</label>
                     <input type="range" id="boxOpacityRange" min="20" max="100" value="95" class="w-full accent-indigo-600">
                 </div>
             </div>
 
-            <!-- Save Box Customization Button -->
             <button onclick="saveBoxStyleSettings()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition">
                 Style Save Karein
             </button>
@@ -372,7 +340,6 @@
                 <button onclick="closeSettings()" class="text-gray-400 hover:text-gray-600 text-sm"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <!-- Screen Background Theme -->
             <div>
                 <label class="block text-[11px] font-bold text-gray-500 mb-1">Puri Screen ka Background Theme:</label>
                 <select id="bgThemeSelect" onchange="changeScreenTheme()" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold outline-none">
@@ -383,21 +350,28 @@
                 </select>
             </div>
 
-            <!-- Custom Auto-Rates Management Section -->
             <div>
                 <label class="block text-[11px] font-bold text-gray-500 mb-1">Custom Rates (Saman aur Unke Daam):</label>
-                <div id="rateSlotsContainer" class="space-y-2 max-h-48 overflow-y-auto pr-1">
-                    <!-- Rate slots JS dwara ayenge -->
-                </div>
+                <div id="rateSlotsContainer" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
             </div>
 
-            <!-- Save Settings Button -->
             <button onclick="saveSettingsData()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition">
                 Sabhi Settings Save Karein
             </button>
         </div>
     </div>
-            // Image Handling (Camera / Gallery) - Zero Lag Optimized
+        <script>
+        let savedEntries = [];
+        let currentEntryType = 'income';
+        let currentHistoryFilter = 'all';
+        let uploadedPhotoBase64 = null;
+        let customRates = [
+            { name: 'diva', rate: 50 },
+            { name: 'lais', rate: 30 },
+            { name: 'kurti', rate: 100 },
+            { name: 'gown', rate: 250 }
+        ];
+
         function handleImageUpload(event) {
             let file = event.target.files[0];
             if(file) {
@@ -420,7 +394,6 @@
             document.getElementById('galleryInput').value = '';
         }
 
-        // Live Auto Calculation based on Custom Rates
         function calculateLiveTotal() {
             let text = document.getElementById('noteInput').value.trim();
             let resultEl = document.getElementById('liveCalcResultText');
@@ -462,8 +435,7 @@
             resultEl.innerText = `${prefix}: ₹${total} (${calcBreakdowns.join(', ') || 'Direct'})`;
             return total;
         }
-            // Entry Types & Filters
-        function setEntryType(type) {
+                    function setEntryType(type) {
             currentEntryType = type;
             let btnInc = document.getElementById('btnTypeIncome');
             let btnExp = document.getElementById('btnTypeExpense');
@@ -491,7 +463,6 @@
             renderHistoryFeed();
         }
 
-        // Save New Entry
         function saveNewEntry() {
             let note = document.getElementById('noteInput').value.trim();
             let amount = calculateLiveTotal();
@@ -515,7 +486,6 @@
             savedEntries.unshift(newEntry);
             localStorage.setItem('athar_notebook_entries', JSON.stringify(savedEntries));
 
-            // Reset form
             document.getElementById('noteInput').value = '';
             removeUploadedImage();
             calculateLiveTotal();
@@ -524,7 +494,6 @@
             renderHistoryFeed();
         }
 
-        // Delete & Clear History
         function deleteSingleEntry(id) {
             if(confirm("Kya aap is pravisti ko delete karna chahte hain?")) {
                 savedEntries = savedEntries.filter(e => e.id !== id);
@@ -543,7 +512,6 @@
             }
         }
 
-        // PDF Report Export
         function downloadPDF() {
             let element = document.getElementById('appContainer');
             let opt = {
@@ -555,8 +523,7 @@
             };
             html2pdf().from(element).set(opt).save();
         }
-            // Dashboard Totals & Weekly/Monthly Calculations
-        function updateDashboardTotals() {
+                 function updateDashboardTotals() {
             let totalIncome = 0;
             let totalExpense = 0;
             let weeklyTotal = 0;
@@ -566,8 +533,7 @@
             let currentMonth = now.getMonth();
             let currentYear = now.getFullYear();
 
-            // Sunday to Sunday calculation logic
-            let currentDayOfWeek = now.getDay(); // 0 is Sunday
+            let currentDayOfWeek = now.getDay();
             let lastSunday = new Date(now);
             lastSunday.setDate(now.getDate() - currentDayOfWeek);
             lastSunday.setHours(0, 0, 0, 0);
@@ -579,13 +545,11 @@
 
                 let entryDate = new Date(entry.timestamp);
                 
-                // Weekly check
                 if(entryDate >= lastSunday) {
                     if(entry.type === 'income') weeklyTotal += amt;
                     else weeklyTotal -= amt;
                 }
 
-                // Monthly check (1st to current date)
                 if(entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear) {
                     if(entry.type === 'income') monthlyTotal += amt;
                     else monthlyTotal -= amt;
@@ -593,15 +557,14 @@
             });
 
             let netGrand = totalIncome - totalExpense;
+
             document.getElementById('netGrandTotalDisplay').innerText = `₹${netGrand}`;
             document.getElementById('topTotalIncomeDisplay').innerText = `₹${totalIncome}`;
             document.getElementById('topTotalExpenseDisplay').innerText = `₹${totalExpense}`;
             document.getElementById('weeklyReportAmount').innerText = `₹${weeklyTotal}`;
             document.getElementById('monthlyReportAmount').innerText = `₹${monthlyTotal}`;
-    
         }
 
-        // Render History Feed
         function renderHistoryFeed() {
             let container = document.getElementById('savedEntriesList');
             container.innerHTML = '';
@@ -644,7 +607,6 @@
             });
         }
 
-        // Floating Calculator Logic
         let calcInputString = "0";
         function toggleCalculator() {
             let calc = document.getElementById('floatingCalculator');
@@ -678,7 +640,6 @@
             document.getElementById('calcHistoryStream').innerHTML = '';
         }
 
-        // Box Customization Modal & Styling Engine
         let activeBoxId = null;
 
         function openBoxStyleModal(boxId) {
@@ -706,7 +667,6 @@
             let padding = document.getElementById('boxPaddingRange').value;
             let opacity = document.getElementById('boxOpacityRange').value;
 
-            // Apply background styling based on gradient type
             let bgStyle = c1;
             if(gradientType === 'linear-right') bgStyle = `linear-gradient(90deg, ${c1}, ${c2})`;
             else if(gradientType === 'linear-diag') bgStyle = `linear-gradient(135deg, ${c1}, ${c2})`;
@@ -718,7 +678,6 @@
             boxEl.style.padding = `${padding}px`;
             boxEl.style.opacity = opacity / 100;
 
-            // Save to LocalStorage
             let customStyles = JSON.parse(localStorage.getItem('athar_box_custom_styles') || '{}');
             customStyles[activeBoxId] = { gradientType, c1, c2, txtColor, fontFamily, padding, opacity, bgStyle };
             localStorage.setItem('athar_box_custom_styles', JSON.stringify(customStyles));
@@ -726,13 +685,11 @@
             closeBoxStyleModal();
         }
 
-        // Editable Header Name Save
         function saveCustomHeaderName() {
             let titleText = document.getElementById('editableAppTitle').innerText.trim();
             localStorage.setItem('athar_custom_app_title', titleText || "ATHAR");
         }
 
-        // General Settings Modal
         function openSettings() {
             document.getElementById('settingsModal').classList.remove('hidden');
             renderRateSlots();
@@ -778,14 +735,12 @@
             alert("Sabhi settings safaltapurvak save ho gayi hain!");
         }
 
-        // Live Clock & Date Init
         setInterval(() => {
             let d = new Date();
             document.getElementById('liveClockDisplay').innerText = d.toLocaleTimeString('hi-IN');
             document.getElementById('liveDateDisplay').innerText = d.toLocaleDateString('hi-IN', { day: '2-digit', month: 'short', year: 'numeric' });
         }, 1000);
 
-        // App Initialization on Load
         window.onload = function() {
             let savedTitle = localStorage.getItem('athar_custom_app_title');
             if(savedTitle) document.getElementById('editableAppTitle').innerText = savedTitle;
@@ -796,7 +751,6 @@
             let loadedRates = localStorage.getItem('athar_custom_rates');
             if(loadedRates) customRates = JSON.parse(loadedRates);
 
-            // Load saved box custom styles
             let customStyles = JSON.parse(localStorage.getItem('athar_box_custom_styles') || '{}');
             Object.keys(customStyles).forEach(boxId => {
                 let boxEl = document.getElementById(boxId);
