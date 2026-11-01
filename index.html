@@ -60,6 +60,47 @@
             </div>
         </div>
 
+        <!-- DASHBOARD 1: GRAND TOTAL (NET BALANCE) -->
+        <div id="grandTotalCard" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-3xl p-5 shadow-xl custom-box-wrapper">
+            <button onclick="openBoxStyleModal('grandTotalCard')" class="box-style-btn" title="Edit Style"><i class="fa-solid fa-palette"></i></button>
+            <div class="text-center space-y-1">
+                <span class="text-[11px] font-bold tracking-widest uppercase opacity-80">Grand Total (Kul Yog / Net Balance)</span>
+                <div id="dashNetBalance" class="text-3xl font-black tracking-tight">₹0</div>
+            </div>
+            <div class="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-white/10 text-center">
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-2.5">
+                    <span class="text-[10px] font-bold opacity-80 block mb-0.5">Kul Kamai (+)</span>
+                    <span id="dashTotalIncome" class="text-base font-extrabold text-emerald-300">₹0</span>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-2.5">
+                    <span class="text-[10px] font-bold opacity-80 block mb-0.5">Kul Kharcha (-)</span>
+                    <span id="dashTotalExpense" class="text-base font-extrabold text-rose-300">₹0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD 2: WEEKLY & MONTHLY STATS -->
+        <div class="grid grid-cols-2 gap-3">
+            <div id="sundayCard" class="bg-white/95 backdrop-blur-xl border border-gray-200/80 rounded-3xl p-3.5 shadow-xl custom-box-wrapper">
+                <button onclick="openBoxStyleModal('sundayCard')" class="box-style-btn" title="Edit Style"><i class="fa-solid fa-palette"></i></button>
+                <div class="flex items-center gap-1.5 text-amber-600 mb-1">
+                    <i class="fa-solid fa-calendar-week text-xs"></i>
+                    <span class="text-[11px] font-bold uppercase tracking-wider">Sunday to Sunday</span>
+                </div>
+                <div id="dashSundayBalance" class="text-lg font-extrabold text-gray-900">₹0</div>
+                <p class="text-[10px] text-gray-400 font-medium">Is Sunday se pichle Sunday tak</p>
+            </div>
+            <div id="monthlyCard" class="bg-white/95 backdrop-blur-xl border border-gray-200/80 rounded-3xl p-3.5 shadow-xl custom-box-wrapper">
+                <button onclick="openBoxStyleModal('monthlyCard')" class="box-style-btn" title="Edit Style"><i class="fa-solid fa-palette"></i></button>
+                <div class="flex items-center gap-1.5 text-indigo-600 mb-1">
+                    <i class="fa-solid fa-calendar-days text-xs"></i>
+                    <span class="text-[11px] font-bold uppercase tracking-wider">Mahina (Monthly)</span>
+                </div>
+                <div id="dashMonthlyBalance" class="text-lg font-extrabold text-gray-900">₹0</div>
+                <p class="text-[10px] text-gray-400 font-medium">1 Tarikh se Aaj tak</p>
+            </div>
+        </div>
+
         <!-- NEW ENTRY CARD -->
         <div id="newEntryCard" class="bg-white/95 backdrop-blur-xl border border-gray-200/80 rounded-3xl p-4 shadow-xl custom-box-wrapper">
             <button onclick="openBoxStyleModal('newEntryCard')" class="box-style-btn" title="Edit Style"><i class="fa-solid fa-palette"></i></button>
@@ -116,7 +157,7 @@
                     <span class="w-8 h-8 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-sm"><i class="fa-solid fa-clock-rotate-left"></i></span>
                     <h3 class="text-sm font-bold text-gray-800">Purani Pravisti (History Feed)</h3>
                 </div>
-                <div class="flex items-center gap-1">
+                <div class="flex items-center gap-1 mr-6">
                     <button onclick="downloadPDF()" class="p-2 text-indigo-600 hover:text-indigo-800 text-xs transition" title="Download PDF"><i class="fa-solid fa-file-pdf text-sm"></i></button>
                     <button onclick="clearAllHistory()" class="p-2 text-rose-500 hover:text-rose-700 text-xs transition" title="Clear History"><i class="fa-solid fa-trash-can text-sm"></i></button>
                 </div>
@@ -170,6 +211,38 @@
         </div>
     </div>
 
+    <!-- BOX STYLE MODAL -->
+    <div id="boxStyleMdl" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+                <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2"><i class="fa-solid fa-palette text-indigo-600"></i> Box Customization</h3>
+                <button onclick="closeBoxStyleModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-gray-500 mb-1">Background Style:</label>
+                <select id="boxGradType" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold">
+                    <option value="solid">Single Solid Color</option>
+                    <option value="glass">Glass White Frosted</option>
+                    <option value="dark">Dark Glass</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-gray-500 mb-1">Box Color / Tint:</label>
+                <input type="color" id="boxPrimaryColor" value="#ffffff" class="w-full h-10 rounded-xl cursor-pointer bg-transparent">
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-gray-500 mb-1">Text Font Style:</label>
+                <select id="boxFontFamily" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold">
+                    <option value="Poppins, sans-serif">Poppins (Modern)</option>
+                    <option value="Caveat, cursive">Caveat (Handwritten)</option>
+                    <option value="Teko, sans-serif">Teko (Bold)</option>
+                    <option value="Rozha One, serif">Rozha One (Classical)</option>
+                </select>
+            </div>
+            <button onclick="saveBoxStyleSettings()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-500/30">Style Save Karein</button>
+        </div>
+    </div>
+
     <!-- GLOBAL SETTINGS MODAL -->
     <div id="settingsModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
@@ -206,6 +279,7 @@
     let currentEntryType = 'income';
     let currentHistoryFilter = 'all';
     let uploadedPhotoBase64 = null;
+    let activeStylingBoxId = null;
     
     let customRates = JSON.parse(localStorage.getItem('athar_custom_rates')) || [
         { name: "diva", rate: 50 },
@@ -322,6 +396,7 @@
             note: note,
             amount: amount,
             photo: uploadedPhotoBase64,
+            timestamp: now.getTime(),
             dateStr: now.toLocaleDateString('hi-IN'),
             timeStr: now.toLocaleTimeString('hi-IN', { hour: '2-digit', minute: '2-digit' })
         };
@@ -331,12 +406,14 @@
         document.getElementById('noteInput').value = '';
         removeUploadedImage();
         renderHistoryFeed();
+        updateDashboardTotals();
     }
 
     function deleteSingleEntry(id) {
         savedEntries = savedEntries.filter(e => e.id !== id);
         localStorage.setItem('athar_notebook_entries', JSON.stringify(savedEntries));
         renderHistoryFeed();
+        updateDashboardTotals();
     }
 
     function clearAllHistory() {
@@ -344,6 +421,7 @@
             savedEntries = [];
             localStorage.removeItem('athar_notebook_entries');
             renderHistoryFeed();
+            updateDashboardTotals();
         }
     }
 
@@ -390,6 +468,47 @@
         });
     }
 
+    function updateDashboardTotals() {
+        let totalInc = 0;
+        let totalExp = 0;
+        let sundayBal = 0;
+        let monthlyBal = 0;
+
+        let now = new Date();
+        let currentMonth = now.getMonth();
+        let currentYear = now.getFullYear();
+        
+        let lastSunday = new Date();
+        lastSunday.setDate(now.getDate() - now.getDay());
+        lastSunday.setHours(0,0,0,0);
+
+        savedEntries.forEach(e => {
+            let amt = parseFloat(e.amount) || 0;
+            let entryDate = e.timestamp ? new Date(e.timestamp) : new Date();
+
+            if(e.type === 'income') totalInc += amt;
+            else totalExp += amt;
+
+            if(entryDate >= lastSunday) {
+                if(e.type === 'income') sundayBal += amt;
+                else sundayBal -= amt;
+            }
+
+            if(entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear) {
+                if(e.type === 'income') monthlyBal += amt;
+                else monthlyBal -= amt;
+            }
+        });
+
+        let netBal = totalInc - totalExp;
+
+        document.getElementById('dashNetBalance').innerText = `₹${netBal}`;
+        document.getElementById('dashTotalIncome').innerText = `+₹${totalInc}`;
+        document.getElementById('dashTotalExpense').innerText = `-₹${totalExp}`;
+        document.getElementById('dashSundayBalance').innerText = `₹${sundayBal}`;
+        document.getElementById('dashMonthlyBalance').innerText = `₹${monthlyBal}`;
+    }
+
     // Calculator Functions
     function toggleCalculator() {
         let calc = document.getElementById('floatingCalculator');
@@ -422,6 +541,46 @@
         } catch(e) {
             display.innerText = 'Error';
         }
+    }
+
+    // Box Style Customization Functions
+    function openBoxStyleModal(boxId) {
+        activeStylingBoxId = boxId;
+        document.getElementById('boxStyleMdl').classList.remove('hidden');
+    }
+
+    function closeBoxStyleModal() {
+        document.getElementById('boxStyleMdl').classList.add('hidden');
+        activeStylingBoxId = null;
+    }
+
+    function saveBoxStyleSettings() {
+        if(!activeStylingBoxId) return;
+        let box = document.getElementById(activeStylingBoxId);
+        let gradType = document.getElementById('boxGradType').value;
+        let primaryColor = document.getElementById('boxPrimaryColor').value;
+        let fontFamily = document.getElementById('boxFontFamily').value;
+
+        if(box) {
+            if(gradType === 'solid') {
+                box.style.background = primaryColor;
+            } else if(gradType === 'glass') {
+                box.style.background = 'rgba(255, 255, 255, 0.9)';
+            } else if(gradType === 'dark') {
+                box.style.background = 'rgba(15, 23, 42, 0.9)';
+                box.style.color = '#ffffff';
+            }
+            box.style.fontFamily = fontFamily;
+
+            let customStyles = JSON.parse(localStorage.getItem('athar_box_custom_styles')) || {};
+            customStyles[activeStylingBoxId] = {
+                bgStyle: box.style.background,
+                txtColor: box.style.color,
+                fontFamily: fontFamily
+            };
+            localStorage.setItem('athar_box_custom_styles', JSON.stringify(customStyles));
+        }
+        closeBoxStyleModal();
     }
 
     // Settings & Rates Functions
@@ -494,9 +653,6 @@
         html2pdf().from(element).save('athar-notebook-history.pdf');
     }
 
-    // Box Style Modal Placeholders
-    function openBoxStyleModal(boxId) {}
-
     setInterval(() => {
         let d = new Date();
         let clockEl = document.getElementById('liveClockDisplay');
@@ -519,7 +675,19 @@
             changeScreenTheme();
         }
 
+        let customStyles = JSON.parse(localStorage.getItem('athar_box_custom_styles')) || {};
+        Object.keys(customStyles).forEach(boxId => {
+            let boxEl = document.getElementById(boxId);
+            let st = customStyles[boxId];
+            if(boxEl && st) {
+                boxEl.style.background = st.bgStyle;
+                if(st.txtColor) boxEl.style.color = st.txtColor;
+                if(st.fontFamily) boxEl.style.fontFamily = st.fontFamily;
+            }
+        });
+
         renderHistoryFeed();
+        updateDashboardTotals();
     };
 </script>
 </body>
