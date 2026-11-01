@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ATHAR Smart Notebook</title>
-    <!-- Tailwind CSS & FontAwesome -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Caveat:wght@600&family=Teko:wght@600&family=Rozha+One&display=swap" rel="stylesheet">
-    <!-- html2pdf for PDF export -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Caveat:wght@700&family=Teko:wght@500;600;700&family=Rozha+One&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         .custom-box-wrapper { position: relative; }
@@ -36,19 +33,18 @@
         .box-style-btn:hover { opacity: 1; transform: scale(1.1); }
     </style>
 </head>
-<body id="appBody" class="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 min-h-screen p-2 sm:p-4 text-gray-800 pb-28 font-['Poppins']">
+<body id="appBody" class="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 min-h-screen p-2 sm:p-4 text-gray-800">
     <div id="appContainer" class="max-w-md mx-auto space-y-3.5">
-                <!-- TOP BRANDING & HEADER SECTION -->
-        <div id="headerBrandingCard" class="bg-white/95 backdrop-blur-xl border border-white/20 rounded-3xl p-4 shadow-xl flex items-center justify-between transition-all duration-300 custom-box-wrapper">
-            <button onclick="openBoxStyleModal('headerBrandingCard')" class="box-style-btn" title="Edit Header Style">
-                <i class="fa-solid fa-palette"></i>
-            </button>
+        
+        <!-- HEADER -->
+        <div id="headerBrandingCard" class="bg-white/95 backdrop-blur-xl border border-white/20 rounded-3xl p-4 shadow-xl custom-box-wrapper">
+            <button onclick="openBoxStyleModal('headerBrandingCard')" class="box-style-btn" title="Edit Style"><i class="fa-solid fa-palette"></i></button>
             <div class="flex items-center gap-3">
-                <div class="w-11 h-11 bg-gradient-to-tr from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-orange-500/30">
+                <div class="w-11 h-11 bg-gradient-to-tr from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-amber-500/30">
                     <i class="fa-solid fa-book-open text-lg"></i>
                 </div>
                 <div>
-                    <h1 id="editableAppTitle" contenteditable="true" onblur="saveCustomHeaderName()" class="text-base font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent outline-none cursor-pointer" title="Click karke naam badlein">ATHAR</h1>
+                    <h1 id="editableAppTitle" contenteditable="true" onblur="saveCustomAppTitle()" class="text-base font-extrabold text-gray-900 tracking-tight outline-none">ATHAR</h1>
                     <div class="flex items-center gap-2 text-[11px] text-gray-500 font-medium">
                         <span id="liveClockDisplay">--:--:--</span>
                         <span>•</span>
@@ -56,845 +52,306 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="flex items-center gap-1.5 mr-6">
-                <button onclick="toggleCalculator()" class="w-9 h-9 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-sm shadow-sm transition" title="Calculator">
-                    <i class="fa-solid fa-calculator"></i>
-                </button>
-                <button onclick="openSettings()" class="w-9 h-9 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl flex items-center justify-center text-sm shadow-sm transition" title="Settings">
-                    <i class="fa-solid fa-sliders"></i>
-                </button>
-            </div>
-        </div>
-                <!-- TOP NET GRAND TOTAL DISPLAY BANNER WITH STYLE BUTTON -->
-        <div id="grandTotalCard" class="bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-700 rounded-3xl p-5 text-white shadow-xl relative overflow-hidden border border-white/20 transition-all duration-300 custom-box-wrapper">
-            <button onclick="openBoxStyleModal('grandTotalCard')" class="box-style-btn" title="Edit Grand Total Style">
-                <i class="fa-solid fa-palette"></i>
-            </button>
-            <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
-            
-            <div class="text-center relative z-10">
-                <p class="text-xs uppercase font-bold tracking-widest text-indigo-200">Grand Total (Kul Yog / Net Balance)</p>
-                <h2 id="netGrandTotalDisplay" class="text-4xl sm:text-5xl font-extrabold text-amber-300 my-1 drop-shadow-md">₹0</h2>
-                
-                <div class="grid grid-cols-2 gap-3 mt-4 pt-3 border-t border-white/15">
-                    <div class="bg-emerald-500/20 backdrop-blur-md rounded-2xl p-2.5 border border-emerald-400/30">
-                        <p class="text-[11px] text-emerald-200 font-medium">Kul Kamai (+)</p>
-                        <p id="topTotalIncomeDisplay" class="text-lg font-bold text-emerald-300">₹0</p>
-                    </div>
-                    <div class="bg-rose-500/20 backdrop-blur-md rounded-2xl p-2.5 border border-rose-400/30">
-                        <p class="text-[11px] text-rose-200 font-medium">Kul Kharcha (-)</p>
-                        <p id="topTotalExpenseDisplay" class="text-lg font-bold text-rose-300">₹0</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-                <!-- WEEKLY & MONTHLY REPORT CARDS -->
-        <div class="grid grid-cols-2 gap-3">
-            <!-- Sunday to Sunday Report -->
-            <div id="weeklyReportCard" class="bg-gradient-to-br from-amber-500/10 via-amber-400/5 to-amber-600/10 border border-amber-300/40 rounded-2xl p-3.5 shadow-sm backdrop-blur-md transition-all duration-300 custom-box-wrapper">
-                <button onclick="openBoxStyleModal('weeklyReportCard')" class="box-style-btn" title="Edit Weekly Card Style">
-                    <i class="fa-solid fa-palette"></i>
-                </button>
-                <div class="flex items-center justify-between text-amber-800 mb-1">
-                    <span class="text-[11px] font-bold uppercase tracking-wider">Sunday to Sunday</span>
-                    <i class="fa-solid fa-calendar-week text-xs"></i>
-                </div>
-                <p id="weeklyReportAmount" class="text-xl font-extrabold text-amber-950">₹0</p>
-                <p class="text-[10px] text-amber-900/70 mt-0.5">is Sunday se pichle Sunday tak</p>
-            </div>
-
-            <!-- Monthly 1st to Last Report -->
-            <div id="monthlyReportCard" class="bg-gradient-to-br from-blue-500/10 via-indigo-400/5 to-cyan-600/10 border border-blue-300/40 rounded-2xl p-3.5 shadow-sm backdrop-blur-md transition-all duration-300 custom-box-wrapper">
-                <button onclick="openBoxStyleModal('monthlyReportCard')" class="box-style-btn" title="Edit Monthly Card Style">
-                    <i class="fa-solid fa-palette"></i>
-                </button>
-                <div class="flex items-center justify-between text-blue-800 mb-1">
-                    <span class="text-[11px] font-bold uppercase tracking-wider">Mahina (Monthly)</span>
-                    <i class="fa-solid fa-calendar-days text-xs"></i>
-                </div>
-                <p id="monthlyReportAmount" class="text-xl font-extrabold text-blue-950">₹0</p>
-                <p class="text-[10px] text-blue-900/70 mt-0.5">1 Tarikh se Aaj tak</p>
-            </div>
-        </div>
-                <!-- NEW ENTRY INPUT CARD WITH STYLE BUTTON -->
-        <div id="newEntryCard" class="bg-white/95 backdrop-blur-xl border border-gray-200/80 rounded-3xl p-4 sm:p-5 shadow-xl transition-all duration-300 custom-box-wrapper">
-            <button onclick="openBoxStyleModal('newEntryCard')" class="box-style-btn" title="Edit New Entry Card Style">
-                <i class="fa-solid fa-palette"></i>
-            </button>
+        <!-- NEW ENTRY CARD -->
+        <div id="newEntryCard" class="bg-white/95 backdrop-blur-xl border border-gray-200/80 rounded-3xl p-4 shadow-xl custom-box-wrapper">
+            <button onclick="openBoxStyleModal('newEntryCard')" class="box-style-btn" title="Edit Style"><i class="fa-solid fa-palette"></i></button>
             <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center gap-2">
-                    <span class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-xs">
-                        <i class="fa-solid fa-pen-nib"></i>
-                    </span>
-                    <h3 class="text-sm font-bold text-gray-800">Nayi Pravisti (New Entry) Jodein</h3>
-                </div>
-                
-                <!-- Income / Expense Type Selector -->
-                <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-semibold">
-                    <button onclick="setEntryType('income')" id="btnTypeIncome" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white shadow-sm transition">Kamai (+)</button>
-                    <button onclick="setEntryType('expense')" id="btnTypeExpense" class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-gray-800 transition">Kharcha (-)</button>
+                    <span class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-sm"><i class="fa-solid fa-pen-nib"></i></span>
+                    <h3 class="text-sm font-bold text-gray-800">Nayi Pravisti (New Entry)</h3>
                 </div>
             </div>
+            
+            <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-semibold mb-3">
+                <button onclick="setEntryType('income')" id="btnTypeIncome" class="flex-1 py-1.5 rounded-lg bg-emerald-600 text-white shadow-sm transition">Kamai (+)</button>
+                <button onclick="setEntryType('expense')" id="btnTypeExpense" class="flex-1 py-1.5 rounded-lg text-gray-600 transition">Kharcha (-)</button>
+            </div>
 
-            <!-- Fast Camera & Gallery Photo Upload (Zero Lag Optimized) -->
+            <!-- Photo Upload -->
             <div class="grid grid-cols-2 gap-2 mb-3">
-                <label class="flex items-center justify-center gap-2 py-2.5 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-2xl text-xs font-semibold border border-indigo-200/60 cursor-pointer transition">
+                <label class="flex items-center justify-center gap-2 py-2.5 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-xs font-semibold cursor-pointer border border-indigo-200 transition">
                     <i class="fa-solid fa-camera"></i>
-                    <span>Direct Camera</span>
+                    <span>Camera</span>
                     <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="handleImageUpload(event)" class="hidden">
                 </label>
-                <label class="flex items-center justify-center gap-2 py-2.5 px-3 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-2xl text-xs font-semibold border border-purple-200/60 cursor-pointer transition">
+                <label class="flex items-center justify-center gap-2 py-2.5 px-3 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-xl text-xs font-semibold cursor-pointer border border-purple-200 transition">
                     <i class="fa-solid fa-image"></i>
-                    <span>Gallery Jodein</span>
+                    <span>Gallery</span>
                     <input type="file" id="galleryInput" accept="image/*" onchange="handleImageUpload(event)" class="hidden">
                 </label>
             </div>
 
-            <!-- Instant Photo Thumbnail Preview -->
+            <!-- Thumbnail Preview -->
             <div id="imagePreviewContainer" class="hidden relative mb-3 inline-block">
                 <img id="uploadedImagePreview" class="w-20 h-20 object-cover rounded-2xl border-2 border-indigo-500 shadow-md">
-                <button onclick="removeUploadedImage()" class="absolute -top-2 -right-2 w-6 h-6 bg-rose-600 text-white rounded-full flex items-center justify-center text-xs shadow-md hover:bg-rose-700 transition">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <button onclick="removeUploadedImage()" class="absolute -top-2 -right-2 w-6 h-6 bg-rose-600 text-white rounded-full flex items-center justify-center text-xs shadow-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <!-- Text Note Input -->
+            <!-- Note Input -->
             <div class="mb-3">
                 <label class="block text-[11px] font-bold text-gray-500 mb-1">Vivaran Likhein (Uda. 20 diva ya 15 lais):</label>
-                <textarea id="noteInput" oninput="calculateLiveTotal()" rows="2" placeholder="Yahan saman ya sankhya likhein..." class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-2xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:bg-white transition outline-none resize-none"></textarea>
+                <textarea id="noteInput" oninput="calculateLiveTotal()" rows="2" placeholder="Yahan saman ya sankhya likhein..." class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium text-gray-800 focus:outline-none focus:border-indigo-500 transition resize-none"></textarea>
             </div>
 
-            <!-- Live Calculated Preview Banner -->
-            <div class="flex items-center justify-between bg-indigo-50/70 border border-indigo-100 px-3.5 py-2.5 rounded-2xl mb-3">
+            <!-- Live Calculation Banner -->
+            <div class="flex items-center justify-between bg-indigo-50/70 border border-indigo-100 px-3.5 py-2.5 rounded-xl mb-3">
                 <span class="text-[11px] font-bold text-indigo-900">Live Calculation:</span>
                 <span id="liveCalcResultText" class="text-xs font-extrabold text-indigo-700">₹0</span>
             </div>
 
-            <!-- Action Buttons: Save & Quick Calc -->
-            <div class="flex items-center gap-2">
-                <button onclick="saveNewEntry()" class="flex-1 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-xs rounded-2xl shadow-lg transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-plus-circle text-sm"></i>
-                    <span>Entry Save Karein</span>
-                </button>
-            </div>
-        </div>
-                <!-- SAVED ENTRIES HISTORY FEED CARD WITH STYLE BUTTON -->
-        <div id="historyFeedCard" class="bg-white/90 backdrop-blur-xl border border-gray-200/80 rounded-3xl p-4 sm:p-5 shadow-xl space-y-3 transition-all duration-300 custom-box-wrapper">
-            <button onclick="openBoxStyleModal('historyFeedCard')" class="box-style-btn" title="Edit History Feed Style">
-                <i class="fa-solid fa-palette"></i>
+            <button onclick="saveNewEntry()" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl text-xs font-bold shadow-lg shadow-indigo-500/30 flex items-center justify-center gap-2 transition hover:opacity-95">
+                <i class="fa-solid fa-plus-circle text-sm"></i>
+                <span>Entry Save Karein</span>
             </button>
-            
-            <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+        </div>
+                <!-- HISTORY FEED -->
+        <div id="historyFeedCard" class="bg-white/95 backdrop-blur-xl border border-gray-200/80 rounded-3xl p-4 shadow-xl custom-box-wrapper">
+            <button onclick="openBoxStyleModal('historyFeedCard')" class="box-style-btn" title="Edit Style"><i class="fa-solid fa-palette"></i></button>
+            <div class="flex items-center justify-between pb-2 border-b border-gray-100 mb-3">
                 <div class="flex items-center gap-2">
-                    <span class="w-8 h-8 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-xs">
-                        <i class="fa-solid fa-clock-rotate-left"></i>
-                    </span>
+                    <span class="w-8 h-8 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-sm"><i class="fa-solid fa-clock-rotate-left"></i></span>
                     <h3 class="text-sm font-bold text-gray-800">Purani Pravisti (History Feed)</h3>
                 </div>
-                
-                <div class="flex items-center gap-1">
-                    <button onclick="downloadPDF()" class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-xl transition text-xs" title="PDF Report Save Karein">
-                        <i class="fa-solid fa-file-pdf text-sm"></i>
-                    </button>
-                    <button onclick="clearAllHistory()" class="p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition text-xs" title="Saaf Karein">
-                        <i class="fa-solid fa-trash-can text-sm"></i>
-                    </button>
-                </div>
+            </div>
+            
+            <!-- Filter Tabs -->
+            <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-semibold text-center mb-3">
+                <button onclick="setHistoryFilter('all')" id="filterTabAll" class="flex-1 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition">Sabhi</button>
+                <button onclick="setHistoryFilter('income')" id="filterTabIncome" class="flex-1 py-1.5 rounded-lg text-gray-600 transition">Kamai</button>
+                <button onclick="setHistoryFilter('expense')" id="filterTabExpense" class="flex-1 py-1.5 rounded-lg text-gray-600 transition">Kharcha</button>
             </div>
 
-            <!-- History Filter Tabs -->
-            <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-semibold text-center">
-                <button onclick="setHistoryFilter('all')" id="filterTabAll" class="flex-1 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition">Sabhi (All)</button>
-                <button onclick="setHistoryFilter('income')" id="filterTabIncome" class="flex-1 py-1.5 rounded-lg text-gray-600 hover:text-gray-800 transition">Kamai (+)</button>
-                <button onclick="setHistoryFilter('expense')" id="filterTabExpense" class="flex-1 py-1.5 rounded-lg text-gray-600 hover:text-gray-800 transition">Kharcha (-)</button>
-            </div>
-
-            <!-- Dynamic Entries Container -->
             <div id="savedEntriesList" class="space-y-2.5 max-h-96 overflow-y-auto pr-1"></div>
         </div>
+
     </div>
-            <!-- FLOATING, DRAGGABLE, RESIZABLE & ADVANCED CALCULATOR MODAL -->
-    <div id="floatingCalculator" class="hidden fixed top-20 right-4 w-72 bg-white/95 backdrop-blur-xl border border-gray-200/90 rounded-3xl shadow-2xl z-50 overflow-hidden resize overflow-auto min-w-[240px] min-h-[320px] max-w-[90vw] max-h-[90vh] transition-all custom-box-wrapper">
-        <button onclick="openBoxStyleModal('floatingCalculator')" class="box-style-btn" title="Edit Calculator Style">
-            <i class="fa-solid fa-palette"></i>
-        </button>
-        <!-- Drag Header -->
-        <div id="calcDragHeader" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3.5 py-2.5 flex items-center justify-between text-xs font-bold cursor-move select-none">
-            <span class="flex items-center gap-1.5"><i class="fa-solid fa-calculator"></i> Smart Calculator</span>
-            <button onclick="toggleCalculator()" class="text-white hover:text-gray-200"><i class="fa-solid fa-xmark text-sm"></i></button>
-        </div>
 
-        <!-- Display & Live Auto-Calculation Screen -->
-        <div class="p-3 bg-gray-50 border-b border-gray-100 text-right">
-            <div id="calcDisplay" class="text-2xl font-black text-gray-800 tracking-wider overflow-x-auto min-h-[36px]">0</div>
-            <div id="calcAutoResult" class="text-xs font-bold text-indigo-600 mt-0.5">Ans: 0</div>
-        </div>
-
-        <!-- Keypad with Backspace & Operators -->
-        <div class="p-3 grid grid-cols-4 gap-1.5">
-            <button onclick="appendCalc('C')" class="p-2.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-xl font-bold text-xs transition">C</button>
-            <button onclick="backspaceCalc()" class="p-2.5 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-xl font-bold text-xs transition" title="Backspace">⌫</button>
-            <button onclick="appendCalc('(')" class="p-2.5 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl font-bold text-xs transition">(</button>
-            <button onclick="appendCalc('/')" class="p-2.5 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-xl font-bold text-xs transition">÷</button>
-            
-            <button onclick="appendCalc('7')" class="p-2.5 bg-gray-50 hover:bg-gray-100 rounded-xl font-bold text-xs transition">7</button>
-            <button onclick="appendCalc('8')" class="p-2.5 bg-gray-50 hover:bg-gray-100 rounded-xl font-bold text-xs transition">8</button>
-            <button onclick="appendCalc('9')" class="p-2.5 bg-gray-50 hover:bg-gray-100 rounded-xl font-bold text-xs transition">9</button>
-            <button onclick="appendCalc('*')" class="p-2.5 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-xl font-bold text-xs transition">×</button>
-            
-            <button onclick="appendCalc('4')" class="p-2.5 bg-gray-50 hover:bg-gray-100 rounded-xl font-bold text-xs transition">4</button>
-            <button onclick="appendCalc('5')" class="p-2.5 bg-gray-50 hover:bg-gray-100 rounded-xl font-bold text-xs transition">5</button>
-            <button onclick="appendCalc('6')" class="p-2.5 bg-gray-50 hover:bg-gray-100 rounded-xl font-bold text-xs transition">6</button>
-            <button onclick="appendCalc('-')" class="p-2.5 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-xl font-bold text-xs transition">-</button>
-            
-            <button onclick="appendCalc('1')" class="p-2.5 bg-gray-50 hover:bg-gray-100 rounded-xl font-bold text-xs transition">1</button>
-            <button onclick="appendCalc('2')" class="p-2.5 bg-gray-50 hover:bg-gray-100 rounded-xl font-bold text-xs transition">2</button>
-            <button onclick="appendCalc('3')" class="p-2.5 bg-gray-50 hover:bg-gray-100 rounded-xl font-bold text-xs transition">3</button>
-            <button onclick="appendCalc('+')" class="p-2.5 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-xl font-bold text-xs transition">+</button>
-            
-            <button onclick="appendCalc('0')" class="col-span-2 p-2.5 bg-gray-50 hover:bg-gray-100 rounded-xl font-bold text-xs transition">0</button>
-            <button onclick="appendCalc('.')" class="p-2.5 bg-gray-50 hover:bg-gray-100 rounded-xl font-bold text-xs transition">.</button>
-            <button onclick="calculateResult()" class="p-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs transition">=</button>
-        </div>
-
-        <div class="px-3 pb-3 border-t border-gray-100">
-            <div class="flex items-center justify-between text-[10px] text-gray-400 py-1">
-                <span>Calc History</span>
-                <button onclick="clearCalcHistory()" class="hover:text-rose-500">Clear</button>
-            </div>
-            <div id="calcHistoryStream" class="text-[11px] text-gray-600 max-h-16 overflow-y-auto space-y-0.5"></div>
-        </div>
-    </div>
-    
-        <!-- PER-BOX STYLE & COLOR SHADING CUSTOMIZATION MODAL -->
-    <div id="boxStyleModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
-            <div class="flex items-center justify-between pb-2 border-b border-gray-100">
-                <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
-                    <i class="fa-solid fa-palette text-indigo-600"></i>
-                    <span id="modalBoxTitleLabel">Box Customization</span>
-                </h3>
-                <button onclick="closeBoxStyleModal()" class="text-gray-400 hover:text-gray-600 text-sm"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-
-            <div>
-                <label class="block text-[11px] font-bold text-gray-500 mb-1">Color Shading / Gradient Mix Type:</label>
-                <select id="boxGradientType" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold outline-none">
-                    <option value="solid">Single Solid Color</option>
-                    <option value="linear-right">Linear Shading (Left to Right)</option>
-                    <option value="linear-diag">Diagonal Shading Mix</option>
-                    <option value="radial-glow">Radial Glow Center</option>
-                </select>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-[11px] font-bold text-gray-500 mb-1">Primary Color:</label>
-                    <div class="flex items-center gap-2">
-                        <input type="color" id="boxColorPrimary" value="#ffffff" class="w-10 h-10 rounded-xl border cursor-pointer">
-                        <span id="primaryColorVal" class="text-[11px] font-mono text-gray-600">#ffffff</span>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-[11px] font-bold text-gray-500 mb-1">Shading Mix Color:</label>
-                    <div class="flex items-center gap-2">
-                        <input type="color" id="boxColorSecondary" value="#f3e7e9" class="w-10 h-10 rounded-xl border cursor-pointer">
-                        <span id="secondaryColorVal" class="text-[11px] font-mono text-gray-600">#f3e7e9</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-[11px] font-bold text-gray-500 mb-1">Text Color:</label>
-                    <input type="color" id="boxTextColor" value="#1f2937" class="w-full h-9 rounded-xl border cursor-pointer p-1">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-bold text-gray-500 mb-1">Font Family Style:</label>
-                    <select id="boxFontFamily" class="w-full px-2 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold outline-none">
-                        <option value="'Poppins', sans-serif">Poppins (Modern)</option>
-                        <option value="'Caveat', cursive">Caveat (Handwritten)</option>
-                        <option value="'Teko', sans-serif">Teko (Bold)</option>
-                        <option value="'Rozha One', serif">Rozha One (Classical)</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="space-y-2">
-                <div>
-                    <label class="block text-[11px] font-bold text-gray-500 mb-1">Box Padding / Size:</label>
-                    <input type="range" id="boxPaddingRange" min="10" max="32" value="16" class="w-full accent-indigo-600">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-bold text-gray-500 mb-1">Background Opacity:</label>
-                    <input type="range" id="boxOpacityRange" min="20" max="100" value="95" class="w-full accent-indigo-600">
-                </div>
-            </div>
-
-            <button onclick="saveBoxStyleSettings()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition">
-                Style Save Karein
-            </button>
-        </div>
-    </div>
-        <!-- GLOBAL SETTINGS MODAL -->
-    <div id="settingsModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <div class="flex items-center justify-between pb-2 border-b border-gray-100">
-                <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
-                    <i class="fa-solid fa-sliders text-indigo-600"></i>
-                    <span>App Settings & Rates</span>
-                </h3>
-                <button onclick="closeSettings()" class="text-gray-400 hover:text-gray-600 text-sm"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-
-            <div>
-                <label class="block text-[11px] font-bold text-gray-500 mb-1">Puri Screen ka Background Theme:</label>
-                <select id="bgThemeSelect" onchange="changeScreenTheme()" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold outline-none">
-                    <option value="dark">Deep Night Sky (Default)</option>
-                    <option value="sunset">Sunset Glow</option>
-                    <option value="light">Clean Modern Light</option>
-                    <option value="emerald">Emerald Forest</option>
-                </select>
-            </div>
-
-            <div>
-                <label class="block text-[11px] font-bold text-gray-500 mb-1">Custom Rates (Saman aur Unke Daam):</label>
-                <div id="rateSlotsContainer" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
-            </div>
-
-            <button onclick="saveSettingsData()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition">
-                Sabhi Settings Save Karein
-            </button>
-        </div>
-    </div>
-        <script>
-        let savedEntries = [];
-        let currentEntryType = 'income';
-        let currentHistoryFilter = 'all';
-        let uploadedPhotoBase64 = null;
-                let customRates = [
-            { name: "diva", rate: 50 },
-            { name: "lais", rate: 30 },
-            { name: "kurti", rate: 100 },
-            { name: "gown", rate: 250 },
-            { name: "shirt", rate: 120 },
-            { name: "jacket", rate: 300 },
-            { name: "palazzo", rate: 90 },
-            { name: "anarkali", rate: 350 },
-            { name: "blouse", rate: 80 },
-            { name: "top", rate: 70 },
-            { name: "jeans", rate: 150 },
-            { name: "suit", rate: 400 },
-            { name: "dupatta", rate: 40 },
-            { name: "salwar", rate: 110 },
-            { name: "coat", rate: 500 }
-        ];
-            
-        function handleImageUpload(event) {
-            let file = event.target.files[0];
-            if(file) {
-                let reader = new FileReader();
-                reader.onload = function(e) {
-                    uploadedPhotoBase64 = e.target.result;
-                    let previewImg = document.getElementById('uploadedImagePreview');
-                    let previewContainer = document.getElementById('imagePreviewContainer');
-                    previewImg.src = uploadedPhotoBase64;
-                    previewContainer.classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function removeUploadedImage() {
-            uploadedPhotoBase64 = null;
-            document.getElementById('imagePreviewContainer').classList.add('hidden');
-            document.getElementById('cameraInput').value = '';
-            document.getElementById('galleryInput').value = '';
-        }
-
-        function calculateLiveTotal() {
-            let text = document.getElementById('noteInput').value.trim();
-            let resultEl = document.getElementById('liveCalcResultText');
-            
-            if(!text) {
-                resultEl.innerText = "₹0";
-                return 0;
-            }
-
-            let total = 0;
-            let calcBreakdowns = [];
-            let lines = text.split('\n');
-
-            lines.forEach(line => {
-                let lowerLine = line.toLowerCase();
-                let matched = false;
-
-                customRates.forEach(r => {
-                    if(lowerLine.includes(r.name)) {
-                        let nums = line.replace(/[^0-9]/g, ' ');
-                        let qty = parseInt(nums) || 1;
-                        let lineAmt = qty * r.rate;
-                        total += lineAmt;
-                        calcBreakdowns.push(`${qty}×₹${r.rate}=₹${lineAmt}`);
-                        matched = true;
-                    }
-                });
-
-                if(!matched) {
-                    let pureNum = parseFloat(line.replace(/[^0-9.]/g, '')) || 0;
-                    if(pureNum > 0) {
-                        total += pureNum;
-                        calcBreakdowns.push(`₹${pureNum}`);
-                    }
-                }
-            });
-
-            let prefix = currentEntryType === 'expense' ? 'Kharcha (-)' : 'Kamai (+)';
-            resultEl.innerText = `${prefix}: ₹${total} (${calcBreakdowns.join(', ') || 'Direct'})`;
-            return total;
-        }
-                    function setEntryType(type) {
-            currentEntryType = type;
-            let btnInc = document.getElementById('btnTypeIncome');
-            let btnExp = document.getElementById('btnTypeExpense');
-            
-            if(type === 'income') {
-                btnInc.className = "px-3 py-1.5 rounded-lg bg-emerald-600 text-white shadow-sm transition";
-                btnExp.className = "px-3 py-1.5 rounded-lg text-gray-600 hover:text-gray-800 transition";
-            } else {
-                btnExp.className = "px-3 py-1.5 rounded-lg bg-rose-600 text-white shadow-sm transition";
-                btnInc.className = "px-3 py-1.5 rounded-lg text-gray-600 hover:text-gray-800 transition";
-            }
-            calculateLiveTotal();
-        }
-
-        function setHistoryFilter(filter) {
-            currentHistoryFilter = filter;
-            let tabAll = document.getElementById('filterTabAll');
-            let tabInc = document.getElementById('filterTabIncome');
-            let tabExp = document.getElementById('filterTabExpense');
-
-            tabAll.className = filter === 'all' ? "flex-1 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition" : "flex-1 py-1.5 rounded-lg text-gray-600 hover:text-gray-800 transition";
-            tabInc.className = filter === 'income' ? "flex-1 py-1.5 rounded-lg bg-emerald-600 text-white shadow-sm transition" : "flex-1 py-1.5 rounded-lg text-gray-600 hover:text-gray-800 transition";
-            tabExp.className = filter === 'expense' ? "flex-1 py-1.5 rounded-lg bg-rose-600 text-white shadow-sm transition" : "flex-1 py-1.5 rounded-lg text-gray-600 hover:text-gray-800 transition";
-
-            renderHistoryFeed();
-        }
-
-        function saveNewEntry() {
-            let note = document.getElementById('noteInput').value.trim();
-            let amount = calculateLiveTotal();
-
-            if(!note && amount === 0 && !uploadedPhotoBase64) {
-                alert("Kripya kuch vivaran ya amount darj karein!");
-                return;
-            }
-
-            let newEntry = {
-                id: Date.now(),
-                type: currentEntryType,
-                note: note || "N/A",
-                amount: amount,
-                photo: uploadedPhotoBase64,
-                timestamp: new Date().toISOString(),
-                dateStr: new Date().toLocaleDateString('hi-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
-                timeStr: new Date().toLocaleTimeString('hi-IN', { hour: '2-digit', minute: '2-digit' })
-            };
-
-            savedEntries.unshift(newEntry);
-            localStorage.setItem('athar_notebook_entries', JSON.stringify(savedEntries));
-
-            document.getElementById('noteInput').value = '';
-            removeUploadedImage();
-            calculateLiveTotal();
-            
-            updateDashboardTotals();
-            renderHistoryFeed();
-        }
-
-        function deleteSingleEntry(id) {
-            if(confirm("Kya aap is pravisti ko delete karna chahte hain?")) {
-                savedEntries = savedEntries.filter(e => e.id !== id);
-                localStorage.setItem('athar_notebook_entries', JSON.stringify(savedEntries));
-                updateDashboardTotals();
-                renderHistoryFeed();
-            }
-        }
-
-        function clearAllHistory() {
-            if(confirm("Kya aap sabhi purani history ko saaf karna chahte hain?")) {
-                savedEntries = [];
-                localStorage.setItem('athar_notebook_entries', JSON.stringify(savedEntries));
-                updateDashboardTotals();
-                renderHistoryFeed();
-            }
-        }
-
-        function downloadPDF() {
-            let element = document.getElementById('appContainer');
-            let opt = {
-                margin: 10,
-                filename: 'ATHAR_Notebook_Report.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-            html2pdf().from(element).set(opt).save();
-        }
-                         // Dashboard Totals & Weekly/Monthly Calculations
-        function updateDashboardTotals() {
-            let totalIncome = 0;
-            let totalExpense = 0;
-            let weeklyTotal = 0;
-            let monthlyTotal = 0;
-
-            let now = new Date();
-            let currentMonth = now.getMonth();
-            let currentYear = now.getFullYear();
-
-            let currentDayOfWeek = now.getDay();
-            let lastSunday = new Date(now);
-            lastSunday.setDate(now.getDate() - currentDayOfWeek);
-            lastSunday.setHours(0, 0, 0, 0);
-
-            savedEntries.forEach(entry => {
-                let amt = parseFloat(entry.amount) || 0;
-                if(entry.type === 'income') totalIncome += amt;
-                else totalExpense += amt;
-
-                let entryDate = new Date(entry.timestamp);
-                
-                if(entryDate >= lastSunday) {
-                    if(entry.type === 'income') weeklyTotal += amt;
-                    else weeklyTotal -= amt;
-                }
-
-                if(entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear) {
-                    if(entry.type === 'income') monthlyTotal += amt;
-                    else monthlyTotal -= amt;
-                }
-            });
-
-            let netGrand = totalIncome - totalExpense;
-
-            document.getElementById('netGrandTotalDisplay').innerText = `₹${netGrand}`;
-            document.getElementById('topTotalIncomeDisplay').innerText = `₹${totalIncome}`;
-            document.getElementById('topTotalExpenseDisplay').innerText = `₹${totalExpense}`;
-            document.getElementById('weeklyReportAmount').innerText = `₹${weeklyTotal}`;
-            document.getElementById('monthlyReportAmount').innerText = `₹${monthlyTotal}`;
-        }
-            
-        function renderHistoryFeed() {
-            let container = document.getElementById('savedEntriesList');
-            container.innerHTML = '';
-
-            let filtered = savedEntries.filter(e => {
-                if(currentHistoryFilter === 'income') return e.type === 'income';
-                if(currentHistoryFilter === 'expense') return e.type === 'expense';
-                return true;
-            });
-
-            if(filtered.length === 0) {
-                container.innerHTML = `<p class="text-center text-xs text-gray-400 py-4">Koi pravisti uplabdh nahi hai.</p>`;
-                return;
-            }
-
-            filtered.forEach(entry => {
-                let isInc = entry.type === 'income';
-                let card = document.createElement('div');
-                card.className = `p-3.5 rounded-2xl border ${isInc ? 'bg-emerald-50/40 border-emerald-200/60' : 'bg-rose-50/40 border-rose-200/60'} flex items-start justify-between gap-3 shadow-sm`;
-
-                let photoHTML = entry.photo ? `<img src="${entry.photo}" class="w-12 h-12 object-cover rounded-xl mt-2 border border-gray-200 cursor-pointer" onclick="window.open('${entry.photo}')">` : '';
-
-                card.innerHTML = `
-                    <div class="space-y-1 flex-1">
-                        <div class="flex items-center gap-2">
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${isInc ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
-                                ${isInc ? 'Kamai (+)' : 'Kharcha (-)'}
-                            </span>
-                            <span class="text-[10px] text-gray-400">${entry.dateStr} • ${entry.timeStr}</span>
-                        </div>
-                        <p class="text-xs font-medium text-gray-800 whitespace-pre-wrap">${entry.note}</p>
-                        ${photoHTML}
-                    </div>
-                    <div class="text-right flex flex-col items-end gap-1">
-                        <span class="text-sm font-extrabold ${isInc ? 'text-emerald-700' : 'text-rose-700'}">${isInc ? '+' : '-'}₹${entry.amount}</span>
-                        <button onclick="deleteSingleEntry(${entry.id})" class="text-gray-400 hover:text-rose-600 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-                // Advanced Calculator Logic with Auto-Calculation, Backspace & Mobile Dragging Support
-        let calcInputString = "0";
-
-        function toggleCalculator() {
-            let calc = document.getElementById('floatingCalculator');
-            calc.classList.toggle('hidden');
-        }
-
-        function updateCalcDisplay() {
-            let displayEl = document.getElementById('calcDisplay');
-            let autoResEl = document.getElementById('calcAutoResult');
-            if(displayEl) displayEl.innerText = calcInputString;
-            try {
-                let sanitized = calcInputString.replace(/×/g, '*').replace(/÷/g, '/');
-                let liveAns = eval(sanitized);
-                if(autoResEl) {
-                    if(isNaN(liveAns) || !isFinite(liveAns)) {
-                        autoResEl.innerText = "Ans: 0";
-                    } else {
-                        autoResEl.innerText = `Ans: ${liveAns}`;
-                    }
-                }
-            } catch(e) {
-                if(autoResEl) autoResEl.innerText = "Ans: ...";
-            }
-        }
-
-        function appendCalc(val) {
-            if(val === 'C') {
-                calcInputString = "0";
-            } else {
-                if(calcInputString === "0" && !['+', '-', '*', '/', '.'].includes(val)) {
-                    calcInputString = val;
-                } else {
-                    calcInputString += val;
-                }
-            }
-            updateCalcDisplay();
-        }
-
-        function backspaceCalc() {
-            if(calcInputString.length > 1) {
-                calcInputString = calcInputString.slice(0, -1);
-            } else {
-                calcInputString = "0";
-            }
-            updateCalcDisplay();
-        }
-
-        function calculateResult() {
-            try {
-                let sanitized = calcInputString.replace(/×/g, '*').replace(/÷/g, '/');
-                let ans = eval(sanitized);
-                let historyStream = document.getElementById('calcHistoryStream');
-                if(historyStream) {
-                    historyStream.innerHTML = `<div>${calcInputString} = <b>${ans}</b></div>` + historyStream.innerHTML;
-                }
-                calcInputString = String(ans);
-                updateCalcDisplay();
-            } catch(err) {
-                let displayEl = document.getElementById('calcDisplay');
-                if(displayEl) displayEl.innerText = "Error";
-                calcInputString = "0";
-            }
-        }
-
-        function clearCalcHistory() {
-            let historyStream = document.getElementById('calcHistoryStream');
-            if(historyStream) historyStream.innerHTML = '';
-        }
-
-                // Enable Smooth Dragging for Calculator
-        const calcEl = document.getElementById('floatingCalculator');
-        const dragHeader = document.getElementById('calcDragHeader');
-        let isDragging = false, startX, startY, initialX, initialY;
-
-        if(dragHeader && calcEl) {
-            dragHeader.addEventListener('mousedown', startDragging);
-            dragHeader.addEventListener('touchstart', startDragging, {passive: true});
-
-            document.addEventListener('mousemove', dragCalc);
-            document.addEventListener('touchmove', dragCalc, {passive: true});
-
-            document.addEventListener('mouseup', stopDragging);
-            document.addEventListener('touchend', stopDragging);
-        }
-
-        function startDragging(e) {
-            isDragging = true;
-            let clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
-            let clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-            
-            startX = clientX;
-            startY = clientY;
-            initialX = calcEl.offsetLeft;
-            initialY = calcEl.offsetTop;
-            calcEl.style.position = 'fixed';
-            calcEl.style.margin = '0';
-        }
-
-        function dragCalc(e) {
-            if (!isDragging) return;
-            let clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
-            let clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
-
-            let dx = clientX - startX;
-            let dy = clientY - startY;
-
-            calcEl.style.left = `${initialX + dx}px`;
-            calcEl.style.top = `${initialY + dy}px`;
-            calcEl.style.right = 'auto';
-        }
-
-        function stopDragging() {
-            isDragging = false;
-        }
-            
-            
-
-        let activeBoxId = null;
-
-        function openBoxStyleModal(boxId) {
-            activeBoxId = boxId;
-            let modal = document.getElementById('boxStyleModal');
-            document.getElementById('modalBoxTitleLabel').innerText = `${boxId} Customization`;
-            modal.classList.remove('hidden');
-        }
-
-        function closeBoxStyleModal() {
-            document.getElementById('boxStyleModal').classList.add('hidden');
-            activeBoxId = null;
-        }
-
-        function saveBoxStyleSettings() {
-            if(!activeBoxId) return;
-            let boxEl = document.getElementById(activeBoxId);
-            if(!boxEl) return;
-
-            let gradientType = document.getElementById('boxGradientType').value;
-            let c1 = document.getElementById('boxColorPrimary').value;
-            let c2 = document.getElementById('boxColorSecondary').value;
-            let txtColor = document.getElementById('boxTextColor').value;
-            let fontFamily = document.getElementById('boxFontFamily').value;
-            let padding = document.getElementById('boxPaddingRange').value;
-            let opacity = document.getElementById('boxOpacityRange').value;
-
-            let bgStyle = c1;
-            if(gradientType === 'linear-right') bgStyle = `linear-gradient(90deg, ${c1}, ${c2})`;
-            else if(gradientType === 'linear-diag') bgStyle = `linear-gradient(135deg, ${c1}, ${c2})`;
-            else if(gradientType === 'radial-glow') bgStyle = `radial-gradient(circle, ${c1}, ${c2})`;
-
-            boxEl.style.background = bgStyle;
-            boxEl.style.color = txtColor;
-            boxEl.style.fontFamily = fontFamily;
-            boxEl.style.padding = `${padding}px`;
-            boxEl.style.opacity = opacity / 100;
-
-            let customStyles = JSON.parse(localStorage.getItem('athar_box_custom_styles') || '{}');
-            customStyles[activeBoxId] = { gradientType, c1, c2, txtColor, fontFamily, padding, opacity, bgStyle };
-            localStorage.setItem('athar_box_custom_styles', JSON.stringify(customStyles));
-
-            closeBoxStyleModal();
-        }
-
-        function saveCustomHeaderName() {
-            let titleText = document.getElementById('editableAppTitle').innerText.trim();
-            localStorage.setItem('athar_custom_app_title', titleText || "ATHAR");
-        }
-
-        function openSettings() {
-            document.getElementById('settingsModal').classList.remove('hidden');
-            renderRateSlots();
-        }
-
-        function closeSettings() {
-            document.getElementById('settingsModal').classList.add('hidden');
-        }
-
-        function renderRateSlots() {
-            let container = document.getElementById('rateSlotsContainer');
-            container.innerHTML = '';
-            customRates.forEach((r, idx) => {
-                let div = document.createElement('div');
-                div.className = "flex items-center gap-2";
-                div.innerHTML = `
-                    <input type="text" value="${r.name}" onchange="updateRateName(${idx}, this.value)" class="flex-1 px-3 py-1.5 bg-gray-50 border rounded-xl text-xs font-medium">
-                    <input type="number" value="${r.rate}" onchange="updateRateValue(${idx}, this.value)" class="w-20 px-3 py-1.5 bg-gray-50 border rounded-xl text-xs font-medium">
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function updateRateName(idx, val) { customRates[idx].name = val.toLowerCase(); saveRatesToStorage(); }
-        function updateRateValue(idx, val) { customRates[idx].rate = parseFloat(val) || 0; saveRatesToStorage(); }
-
-        function saveRatesToStorage() {
-            localStorage.setItem('athar_custom_rates', JSON.stringify(customRates));
-        }
-
-        function changeScreenTheme() {
-            let theme = document.getElementById('bgThemeSelect').value;
-            let body = document.getElementById('appBody');
-            if(theme === 'sunset') body.className = "bg-gradient-to-br from-amber-900 via-orange-950 to-rose-950 min-h-screen p-2 sm:p-4 text-gray-800 pb-28";
-            else if(theme === 'light') body.className = "bg-gradient-to-br from-slate-100 via-gray-200 to-zinc-300 min-h-screen p-2 sm:p-4 text-gray-900 pb-28";
-            else if(theme === 'emerald') body.className = "bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-950 min-h-screen p-2 sm:p-4 text-gray-800 pb-28";
-            else body.className = "bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 min-h-screen p-2 sm:p-4 text-gray-800 pb-28";
-            localStorage.setItem('athar_screen_theme', theme);
-        }
-
-        function saveSettingsData() {
-            closeSettings();
-            alert("Sabhi settings safaltapurvak save ho gayi hain!");
-        }
-
-        setInterval(() => {
-            let d = new Date();
-            document.getElementById('liveClockDisplay').innerText = d.toLocaleTimeString('hi-IN');
-            document.getElementById('liveDateDisplay').innerText = d.toLocaleDateString('hi-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-        }, 1000);
-
-        window.onload = function() {
-            let savedTitle = localStorage.getItem('athar_custom_app_title');
-            if(savedTitle) document.getElementById('editableAppTitle').innerText = savedTitle;
-
-            let loadedEntries = localStorage.getItem('athar_notebook_entries');
-            if(loadedEntries) savedEntries = JSON.parse(loadedEntries);
-
-            let loadedRates = localStorage.getItem('athar_custom_rates');
-            if(loadedRates) customRates = JSON.parse(loadedRates);
-
-            let customStyles = JSON.parse(localStorage.getItem('athar_box_custom_styles') || '{}');
-            Object.keys(customStyles).forEach(boxId => {
-                let boxEl = document.getElementById(boxId);
-                let st = customStyles[boxId];
-                if(boxEl && st) {
-                    boxEl.style.background = st.bgStyle;
-                    boxEl.style.color = st.txtColor;
-                    boxEl.style.fontFamily = st.fontFamily;
-                    boxEl.style.padding = `${st.padding}px`;
-                    boxEl.style.opacity = st.opacity / 100;
-                }
-            });
-
-            updateDashboardTotals();
-            renderHistoryFeed();
-        };
-                <!-- PHOTO ZOOM / LIGHTBOX MODAL -->
+    <!-- PHOTO ZOOM / LIGHTBOX MODAL -->
     <div id="photoZoomModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4" onclick="closePhotoZoom()">
         <div class="relative max-w-2xl max-h-[90vh]" onclick="event.stopPropagation()">
             <button onclick="closePhotoZoom()" class="absolute -top-10 right-0 text-white hover:text-gray-300 text-2xl font-bold p-2"><i class="fa-solid fa-xmark"></i></button>
             <img id="zoomedImagePreview" src="" class="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl border-2 border-white/20">
         </div>
     </div>
-              // Photo Zoom Modal Functions
-        function openPhotoZoom(imgSrc) {
-            let modal = document.getElementById('photoZoomModal');
-            let modalImg = document.getElementById('zoomedImagePreview');
-            if(modal && modalImg) {
-                modalImg.src = imgSrc;
-                modal.classList.remove('hidden');
+    <script>
+    let savedEntries = [];
+    let currentEntryType = 'income';
+    let currentHistoryFilter = 'all';
+    let uploadedPhotoBase64 = null;
+    
+    // 15 Custom Rates
+    let customRates = JSON.parse(localStorage.getItem('athar_custom_rates')) || [
+        { name: "diva", rate: 50 },
+        { name: "lais", rate: 30 },
+        { name: "kurti", rate: 100 },
+        { name: "gown", rate: 250 },
+        { name: "shirt", rate: 120 },
+        { name: "jacket", rate: 300 },
+        { name: "palazzo", rate: 90 },
+        { name: "anarkali", rate: 350 },
+        { name: "blouse", rate: 80 },
+        { name: "top", rate: 70 },
+        { name: "jeans", rate: 150 },
+        { name: "suit", rate: 400 },
+        { name: "dupatta", rate: 40 },
+        { name: "salwar", rate: 110 },
+        { name: "coat", rate: 500 }
+    ];
+
+    function handleImageUpload(event) {
+        let file = event.target.files[0];
+        if(file) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedPhotoBase64 = e.target.result;
+                let previewImg = document.getElementById('uploadedImagePreview');
+                let previewContainer = document.getElementById('imagePreviewContainer');
+                previewImg.src = uploadedPhotoBase64;
+                previewContainer.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function removeUploadedImage() {
+        uploadedPhotoBase64 = null;
+        document.getElementById('imagePreviewContainer').classList.add('hidden');
+        document.getElementById('cameraInput').value = '';
+        document.getElementById('galleryInput').value = '';
+    }
+
+    function calculateLiveTotal() {
+        let text = document.getElementById('noteInput').value.trim();
+        let resultEl = document.getElementById('liveCalcResultText');
+        if(!text) {
+            resultEl.innerText = "₹0";
+            return 0;
+        }
+        let total = 0;
+        let calcBreakdowns = [];
+        let lines = text.split('\n');
+
+        lines.forEach(line => {
+            let lowerLine = line.toLowerCase();
+            let matched = false;
+            customRates.forEach(r => {
+                if(lowerLine.includes(r.name)) {
+                    let nums = line.replace(/[^0-9.]/g, '');
+                    let qty = parseInt(nums) || 1;
+                    let lineAmt = qty * r.rate;
+                    total += lineAmt;
+                    calcBreakdowns.push(`${qty}×₹${r.rate}=₹${lineAmt}`);
+                    matched = true;
+                }
+            });
+            if(!matched) {
+                let pureNum = parseFloat(line.replace(/[^0-9.]/g, '')) || 0;
+                if(pureNum > 0) {
+                    total += pureNum;
+                    calcBreakdowns.push(`₹${pureNum}`);
+                }
             }
+        });
+
+        let prefix = currentEntryType === 'expense' ? 'Kharcha (-)' : 'Kamai (+)';
+        resultEl.innerText = `${prefix}: ₹${total} (${calcBreakdowns.join(', ')})`;
+        return total;
+    }
+
+    function setEntryType(type) {
+        currentEntryType = type;
+        let btnInc = document.getElementById('btnTypeIncome');
+        let btnExp = document.getElementById('btnTypeExpense');
+        if(type === 'income') {
+            btnInc.className = "flex-1 py-1.5 rounded-lg bg-emerald-600 text-white shadow-sm transition";
+            btnExp.className = "flex-1 py-1.5 rounded-lg text-gray-600 transition";
+        } else {
+            btnExp.className = "flex-1 py-1.5 rounded-lg bg-rose-600 text-white shadow-sm transition";
+            btnInc.className = "flex-1 py-1.5 rounded-lg text-gray-600 transition";
+        }
+        calculateLiveTotal();
+    }
+
+    function setHistoryFilter(filter) {
+        currentHistoryFilter = filter;
+        ['all', 'income', 'expense'].forEach(f => {
+            let btn = document.getElementById(`filterTab${f.charAt(0).toUpperCase() + f.slice(1)}`);
+            if(btn) btn.className = f === filter ? "flex-1 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition" : "flex-1 py-1.5 rounded-lg text-gray-600 transition";
+        });
+        renderHistoryFeed();
+    }
+
+    function saveNewEntry() {
+        let note = document.getElementById('noteInput').value.trim();
+        let amount = calculateLiveTotal();
+        if(amount <= 0 && !note) {
+            alert("Kripya kuch vivaran ya rashi darj karein!");
+            return;
+        }
+        let now = new Date();
+        let newEntry = {
+            id: Date.now(),
+            type: currentEntryType,
+            note: note,
+            amount: amount,
+            photo: uploadedPhotoBase64,
+            dateStr: now.toLocaleDateString('hi-IN'),
+            timeStr: now.toLocaleTimeString('hi-IN', { hour: '2-digit', minute: '2-digit' })
+        };
+        savedEntries.unshift(newEntry);
+        localStorage.setItem('athar_notebook_entries', JSON.stringify(savedEntries));
+        
+        document.getElementById('noteInput').value = '';
+        removeUploadedImage();
+        renderHistoryFeed();
+        updateDashboardTotals();
+    }
+
+    function deleteSingleEntry(id) {
+        savedEntries = savedEntries.filter(e => e.id !== id);
+        localStorage.setItem('athar_notebook_entries', JSON.stringify(savedEntries));
+        renderHistoryFeed();
+        updateDashboardTotals();
+    }
+
+    function renderHistoryFeed() {
+        let container = document.getElementById('savedEntriesList');
+        if(!container) return;
+        container.innerHTML = '';
+
+        let filtered = savedEntries.filter(e => {
+            if(currentHistoryFilter === 'income') return e.type === 'income';
+            if(currentHistoryFilter === 'expense') return e.type === 'expense';
+            return true;
+        });
+
+        if(filtered.length === 0) {
+            container.innerHTML = `<p class="text-center text-xs text-gray-400 py-4">Koi pravisti uplabdh nahi hai.</p>`;
+            return;
         }
 
-        function closePhotoZoom() {
-            let modal = document.getElementById('photoZoomModal');
-            if(modal) modal.classList.add('hidden');
+        filtered.forEach(entry => {
+            let isInc = entry.type === 'income';
+            let card = document.createElement('div');
+            card.className = `p-3.5 rounded-2xl border ${isInc ? 'bg-emerald-50/40 border-emerald-200/60' : 'bg-rose-50/40 border-rose-200/60'} custom-box-wrapper transition-all flex items-center justify-between gap-3`;
+            
+            let photoHTML = entry.photo ? `<img src="${entry.photo}" onclick="openPhotoZoom('${entry.photo}')" class="w-12 h-12 object-cover rounded-xl border-2 border-indigo-500 shadow-md cursor-pointer hover:scale-105 transition" title="Bada karne ke liye click karein">` : '';
+
+            card.innerHTML = `
+                <div class="space-y-1 flex-1">
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${isInc ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">
+                            ${isInc ? 'Kamai (+)' : 'Kharcha (-)'}
+                        </span>
+                        <span class="text-[10px] text-gray-400">${entry.dateStr || ''} ${entry.timeStr || ''}</span>
+                    </div>
+                    <p class="text-xs font-medium text-gray-800 whitespace-pre-wrap">${entry.note || ''}</p>
+                    ${photoHTML}
+                </div>
+                <div class="text-right flex flex-col items-end gap-1">
+                    <span class="text-sm font-extrabold ${isInc ? 'text-emerald-700' : 'text-rose-700'}">${isInc ? '+' : '-'}₹${entry.amount}</span>
+                    <button onclick="deleteSingleEntry(${entry.id})" class="text-gray-400 hover:text-rose-600 text-xs p-1"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function updateDashboardTotals() {
+        // Dashboard sums placeholder if needed
+    }
+
+    // Zoom Modal Functions
+    function openPhotoZoom(imgSrc) {
+        let modal = document.getElementById('photoZoomModal');
+        let modalImg = document.getElementById('zoomedImagePreview');
+        if(modal && modalImg) {
+            modalImg.src = imgSrc;
+            modal.classList.remove('hidden');
         }
-      
-    </script>
+    }
+
+    function closePhotoZoom() {
+        let modal = document.getElementById('photoZoomModal');
+        if(modal) modal.classList.add('hidden');
+    }
+
+    function saveCustomAppTitle() {
+        let titleText = document.getElementById('editableAppTitle').innerText;
+        localStorage.setItem('athar_custom_app_title', titleText);
+    }
+
+    window.onload = function() {
+        let loadedEntries = localStorage.getItem('athar_notebook_entries');
+        if(loadedEntries) savedEntries = JSON.parse(loadedEntries);
+        
+        let loadedRates = localStorage.getItem('athar_custom_rates');
+        if(loadedRates) customRates = JSON.parse(loadedRates);
+
+        renderHistoryFeed();
+    };
+</script>
 </body>
 </html>
