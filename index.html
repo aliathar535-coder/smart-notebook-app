@@ -616,38 +616,124 @@
             });
         }
 
+                // Advanced Calculator Logic with Auto-Calculation, Backspace & Mobile Dragging Support
         let calcInputString = "0";
+
         function toggleCalculator() {
             let calc = document.getElementById('floatingCalculator');
             calc.classList.toggle('hidden');
+        }
+
+        function updateCalcDisplay() {
+            let displayEl = document.getElementById('calcDisplay');
+            let autoResEl = document.getElementById('calcAutoResult');
+            if(displayEl) displayEl.innerText = calcInputString;
+            try {
+                let sanitized = calcInputString.replace(/×/g, '*').replace(/÷/g, '/');
+                let liveAns = eval(sanitized);
+                if(autoResEl) {
+                    if(isNaN(liveAns) || !isFinite(liveAns)) {
+                        autoResEl.innerText = "Ans: 0";
+                    } else {
+                        autoResEl.innerText = `Ans: ${liveAns}`;
+                    }
+                }
+            } catch(e) {
+                if(autoResEl) autoResEl.innerText = "Ans: ...";
+            }
         }
 
         function appendCalc(val) {
             if(val === 'C') {
                 calcInputString = "0";
             } else {
-                if(calcInputString === "0") calcInputString = val;
-                else calcInputString += val;
+                if(calcInputString === "0" && !['+', '-', '*', '/', '.'].includes(val)) {
+                    calcInputString = val;
+                } else {
+                    calcInputString += val;
+                }
             }
-            document.getElementById('calcDisplay').innerText = calcInputString;
+            updateCalcDisplay();
+        }
+
+        function backspaceCalc() {
+            if(calcInputString.length > 1) {
+                calcInputString = calcInputString.slice(0, -1);
+            } else {
+                calcInputString = "0";
+            }
+            updateCalcDisplay();
         }
 
         function calculateResult() {
             try {
-                let ans = eval(calcInputString);
+                let sanitized = calcInputString.replace(/×/g, '*').replace(/÷/g, '/');
+                let ans = eval(sanitized);
                 let historyStream = document.getElementById('calcHistoryStream');
-                historyStream.innerHTML = `<div>${calcInputString} = <b>${ans}</b></div>` + historyStream.innerHTML;
+                if(historyStream) {
+                    historyStream.innerHTML = `<div>${calcInputString} = <b>${ans}</b></div>` + historyStream.innerHTML;
+                }
                 calcInputString = String(ans);
-                document.getElementById('calcDisplay').innerText = calcInputString;
+                updateCalcDisplay();
             } catch(err) {
-                document.getElementById('calcDisplay').innerText = "Error";
+                let displayEl = document.getElementById('calcDisplay');
+                if(displayEl) displayEl.innerText = "Error";
                 calcInputString = "0";
             }
         }
 
         function clearCalcHistory() {
-            document.getElementById('calcHistoryStream').innerHTML = '';
+            let historyStream = document.getElementById('calcHistoryStream');
+            if(historyStream) historyStream.innerHTML = '';
         }
+
+                // Enable Smooth Dragging for Calculator
+        const calcEl = document.getElementById('floatingCalculator');
+        const dragHeader = document.getElementById('calcDragHeader');
+        let isDragging = false, startX, startY, initialX, initialY;
+
+        if(dragHeader && calcEl) {
+            dragHeader.addEventListener('mousedown', startDragging);
+            dragHeader.addEventListener('touchstart', startDragging, {passive: true});
+
+            document.addEventListener('mousemove', dragCalc);
+            document.addEventListener('touchmove', dragCalc, {passive: true});
+
+            document.addEventListener('mouseup', stopDragging);
+            document.addEventListener('touchend', stopDragging);
+        }
+
+        function startDragging(e) {
+            isDragging = true;
+            let clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+            let clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+            
+            startX = clientX;
+            startY = clientY;
+            initialX = calcEl.offsetLeft;
+            initialY = calcEl.offsetTop;
+            calcEl.style.position = 'fixed';
+            calcEl.style.margin = '0';
+        }
+
+        function dragCalc(e) {
+            if (!isDragging) return;
+            let clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+            let clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+
+            let dx = clientX - startX;
+            let dy = clientY - startY;
+
+            calcEl.style.left = `${initialX + dx}px`;
+            calcEl.style.top = `${initialY + dy}px`;
+            calcEl.style.right = 'auto';
+        }
+
+        function stopDragging() {
+            isDragging = false;
+        }
+            
+            
 
         let activeBoxId = null;
 
