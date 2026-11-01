@@ -214,21 +214,28 @@
             <div id="savedEntriesList" class="space-y-2.5 max-h-96 overflow-y-auto pr-1"></div>
         </div>
     </div>
-        <!-- FLOATING & RESIZABLE CALCULATOR MODAL -->
-    <div id="floatingCalculator" class="hidden fixed top-20 right-4 w-72 bg-white/95 backdrop-blur-xl border border-gray-200/90 rounded-3xl shadow-2xl z-50 overflow-hidden">
-        <div id="calcDragHeader" class="drag-handle bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3.5 py-2.5 flex items-center justify-between text-xs font-bold cursor-move">
-            <span class="flex items-center gap-1.5"><i class="fa-solid fa-calculator"></i> Title Calculator</span>
+            <!-- FLOATING, DRAGGABLE, RESIZABLE & ADVANCED CALCULATOR MODAL -->
+    <div id="floatingCalculator" class="hidden fixed top-20 right-4 w-72 bg-white/95 backdrop-blur-xl border border-gray-200/90 rounded-3xl shadow-2xl z-50 overflow-hidden resize overflow-auto min-w-[240px] min-h-[320px] max-w-[90vw] max-h-[90vh] transition-all custom-box-wrapper">
+        <button onclick="openBoxStyleModal('floatingCalculator')" class="box-style-btn" title="Edit Calculator Style">
+            <i class="fa-solid fa-palette"></i>
+        </button>
+        <!-- Drag Header -->
+        <div id="calcDragHeader" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3.5 py-2.5 flex items-center justify-between text-xs font-bold cursor-move select-none">
+            <span class="flex items-center gap-1.5"><i class="fa-solid fa-calculator"></i> Smart Calculator</span>
             <button onclick="toggleCalculator()" class="text-white hover:text-gray-200"><i class="fa-solid fa-xmark text-sm"></i></button>
         </div>
 
+        <!-- Display & Live Auto-Calculation Screen -->
         <div class="p-3 bg-gray-50 border-b border-gray-100 text-right">
-            <div id="calcDisplay" class="text-2xl font-black text-gray-800 tracking-wider overflow-x-auto">0</div>
+            <div id="calcDisplay" class="text-2xl font-black text-gray-800 tracking-wider overflow-x-auto min-h-[36px]">0</div>
+            <div id="calcAutoResult" class="text-xs font-bold text-indigo-600 mt-0.5">Ans: 0</div>
         </div>
 
+        <!-- Keypad with Backspace & Operators -->
         <div class="p-3 grid grid-cols-4 gap-1.5">
             <button onclick="appendCalc('C')" class="p-2.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-xl font-bold text-xs transition">C</button>
+            <button onclick="backspaceCalc()" class="p-2.5 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-xl font-bold text-xs transition" title="Backspace">⌫</button>
             <button onclick="appendCalc('(')" class="p-2.5 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl font-bold text-xs transition">(</button>
-            <button onclick="appendCalc(')')" class="p-2.5 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl font-bold text-xs transition">)</button>
             <button onclick="appendCalc('/')" class="p-2.5 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-xl font-bold text-xs transition">÷</button>
             
             <button onclick="appendCalc('7')" class="p-2.5 bg-gray-50 hover:bg-gray-100 rounded-xl font-bold text-xs transition">7</button>
@@ -259,6 +266,7 @@
             <div id="calcHistoryStream" class="text-[11px] text-gray-600 max-h-16 overflow-y-auto space-y-0.5"></div>
         </div>
     </div>
+    
         <!-- PER-BOX STYLE & COLOR SHADING CUSTOMIZATION MODAL -->
     <div id="boxStyleModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
@@ -523,7 +531,8 @@
             };
             html2pdf().from(element).set(opt).save();
         }
-                 function updateDashboardTotals() {
+                         // Dashboard Totals & Weekly/Monthly Calculations
+        function updateDashboardTotals() {
             let totalIncome = 0;
             let totalExpense = 0;
             let weeklyTotal = 0;
@@ -564,7 +573,7 @@
             document.getElementById('weeklyReportAmount').innerText = `₹${weeklyTotal}`;
             document.getElementById('monthlyReportAmount').innerText = `₹${monthlyTotal}`;
         }
-
+            
         function renderHistoryFeed() {
             let container = document.getElementById('savedEntriesList');
             container.innerHTML = '';
