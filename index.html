@@ -593,12 +593,12 @@
             });
 
             let netGrand = totalIncome - totalExpense;
-
-            document.getElementById('netGrandTotalDisplay.innerText = `₹${netGrand}`;
+            document.getElementById('netGrandTotalDisplay').innerText = `₹${netGrand}`;
             document.getElementById('topTotalIncomeDisplay').innerText = `₹${totalIncome}`;
             document.getElementById('topTotalExpenseDisplay').innerText = `₹${totalExpense}`;
             document.getElementById('weeklyReportAmount').innerText = `₹${weeklyTotal}`;
             document.getElementById('monthlyReportAmount').innerText = `₹${monthlyTotal}`;
+    
         }
 
         // Render History Feed
