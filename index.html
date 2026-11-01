@@ -374,8 +374,7 @@
 
     const TextStyleGenerator = {
         gothicMap: {'A':"𝕬",'B':"𝕭",'C':"𝕮",'D':"𝕯",'E':"𝕰",'F':"𝕱",'G':"𝕲",'H':"𝕧",'I':"𝕴",'J':"𝕵",'K':"𝕶",'L':"𝕷",'M':"𝕸",'N':"𝕹",'O':"𝕺",'P':"𝕻",'Q':"𝕼",'R':"𝕽",'S':"𝕾",'T':"𝕿",'U':"𝖀",'V':"𝖁",'W':"𝖂",'X':"𝖃",'Y':"𝖄",'Z':"𝖅",'a':"𝖆",'b':"𝖇",'c':"𝖈",'d':"𝖉",'e':"𝖊",'f':"𝖋",'g':"𝖌",'h':"𝖍",'i':"𝖎",'j':"𝖏",'k':"𝖐",'l':"𝖑",'m':"𝖒",'n':"𝖓",'o':"𝖔",'p':"𝖕",'q':"𝖖",'r':"𝖗",'s':"𝖘",'t':"𝖙",'u':"𝖚",'v':"𝖛",'w':"𝖜",'x':"𝖞",'y':"𝖟"},
-        cursiveMap: {'A':"𝓐",'B':"𝓑",'C':"𝓒",'D':"𝓓",'E':"𝓔",'F':"𝓯",'G':"𝓖",'H':"𝓗",'I':"𝓘",'J':"𝓙",'K':"𝓚",'L':"𝓛",'M':"𝓜",'N':"𝓝",'O':"𝓞",'P':"𝓟",'Q':"𝓠",'R':"𝓡",'S':"𝓢",'T':"𝓣",'U':"𝓤",'V':"𝓥",'W':"𝓦",'X':"𝓧",'Y':"𝓨",'Z':"𝓩",'a':"𝓪",'b':"𝓫",'c':"𝓬",'d':"𝓭",'e':"𝓮",'f':"𝓯",'g':"```javascript
-'g':"𝓰",'h':"𝓱",'i':"𝓲",'j':"𝓳",'k':"𝓴",'l':"𝓵",'m':"𝓶",'n':"𝓷",'o':"𝓸",'p':"𝓹",'q':"𝓺",'r':"𝓻",'s':"𝓼",'t':"𝓽",'u':"𝓾",'v':"𝓿",'w':"𝔀",'x':"𝓯",'y':"𝔂",'z':"𝓯"},
+        cursiveMap: {'A':"𝓐",'B':"𝓑",'C':"𝓒",'D':"𝓓",'E':"𝓔",'F':"𝓯",'G':"𝓖",'H':"𝓗",'I':"𝓘",'J':"𝓙",'K':"𝓚",'L':"𝓛",'M':"𝓜",'N':"𝓝",'O':"𝓞",'P':"𝓟",'Q':"𝓠",'R':"𝓡",'S':"𝓢",'T':"𝓣",'U':"𝓤",'V':"𝓥",'W':"𝓦",'X':"𝓧",'Y':"𝓨",'Z':"𝓩",'a':"𝓪",'b':"𝓫",'c':"𝓬",'d':"𝓭",'e':"𝓮",'f':"𝓯",'g':"𝓰",'h':"𝓱",'i':"𝓲",'j':"𝓳",'k':"𝓴",'l':"𝓵",'m':"𝓶",'n':"𝓷",'o':"𝓸",'p':"𝓹",'q':"𝓺",'r':"𝓻",'s':"𝓼",'t':"𝓽",'u':"𝓾",'v':"𝓿",'w':"𝔀",'x':"𝓯",'y':"𝔂",'z':"𝓯"},
         circleMap: {'A':"ⓐ",'B':"ⓑ",'C':"ⓒ",'D':"ⓓ",'E':"ⓔ",'F':"ⓕ",'G':"ⓖ",'H':"ⓗ",'I':"ⓘ",'J':"ⓙ",'K':"ⓚ",'L':"ⓛ",'M':"ⓜ",'N':"ⓝ",'O':"ⓞ",'P':"ⓟ",'Q':"ⓠ",'R':"ⓡ",'S':"ⓢ",'T':"ⓣ",'U':"ⓤ",'V':"ⓥ",'W':"ⓦ",'X':"ⓧ",'Y':"ⓨ",'Z':"ⓩ",'a':"ⓐ",'b':"ⓑ",'c':"ⓒ",'d':"ⓓ",'e':"ⓔ",'f':"ⓕ",'g':"ⓖ",'h':"ⓗ",'i':"ⓘ",'j':"ⓙ",'k':"ⓚ",'l':"ⓛ",'m':"ⓜ",'n':"ⓝ",'o':"ⓞ",'p':"ⓟ",'q':"ⓠ",'r':"ⓡ",'s':"ⓢ",'t':"ⓣ",'u':"ⓤ",'v':"ⓥ",'w':"ⓦ",'x':"ⓧ",'y':"ⓨ",'z':"ⓩ"},
         squareMap: {'A':"🅰",'B':"🅱",'C':"🅲",'D':"🅳",'E':"🅴",'F':"🅵",'G':"🅶",'H':"🅷",'I':"🅸",'J':"🅹",'K':"🅺",'L':"🅻",'M':"🅼",'N':"🅽",'O':"🅾",'P':"🅿",'Q':"🅑",'R':"🆁",'S':"🅂",'T':"🅃",'U':"🅄",'V':"🅅",'W':"7",'X':"🅯",'Y':"🅈",'Z':"🅉",'a':"🅰",'b':"🅱",'c':"🅲",'d':"🅳",'e':"🅴",'f':"🅵",'g':"🅶",'h':"🅷",'i':"🅸",'j':"🅹",'k':"🅺",'l':"🅻",'m':"🅼",'n':"🅽",'o':"🅾",'p':"🅿",'q':"🅑",'r':"🆁",'s':"🅂",'t':"🅃",'u':"🅄",'v':"🅅",'w':"7",'x':"🅯",'y':"🅈",'z':"🅉"},
         convertText: function(inputText, styleType) {
@@ -444,8 +443,7 @@
         resultEl.innerText = `${prefix}: ₹${total} (${calcBreakdowns.join(', ')})`;
         return total;
     }
-
-    function setEntryType(type) {
+            function setEntryType(type) {
         currentEntryType = type;
         let btnInc = document.getElementById('btnTypeIncome');
         let btnExp = document.getElementById('btnTypeExpense');
@@ -595,7 +593,6 @@
         document.getElementById('dashMonthlyBalance').innerText = `₹${monthlyBal}`;
     }
 
-    // Draggable Calculator Drag Logic
     let calcEl = document.getElementById('floatingCalculator');
     let calcHeader = document.getElementById('calcDragHeader');
     let isDraggingCalc = false, startX = 0, startY = 0, initialLeft = 0, initialTop = 0;
@@ -681,10 +678,8 @@
         } catch(e) {
             display.innerText = 'Error';
         }
-    }
-
-    // Advanced Box Style & Shading Customization Functions
-    function openBoxStyleModal(boxId) {
+        }
+            function openBoxStyleModal(boxId) {
         activeStylingBoxId = boxId;
         document.getElementById('boxStyleMdl').classList.remove('hidden');
     }
@@ -744,7 +739,6 @@
         let unicodeStyle = document.getElementById('unicodeStyleType').value;
 
         if(box) {
-            // Apply Multi-Color Gradient Shading
             if(gradType === 'solid') {
                 box.style.background = primaryColor;
             } else if(gradType === 'gradient2') {
@@ -761,7 +755,6 @@
                 box.style.background = 'rgba(15, 23, 42, 0.9)';
             }
 
-            // Direct Text Color Application
             box.style.color = textColor;
             box.style.fontFamily = fontFamily;
             box.style.fontWeight = isBold ? 'bold' : 'normal';
