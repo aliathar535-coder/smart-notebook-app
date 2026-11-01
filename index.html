@@ -39,17 +39,23 @@
         <!-- HEADER -->
         <div id="headerBrandingCard" class="bg-white/95 backdrop-blur-xl border border-white/20 rounded-3xl p-4 shadow-xl custom-box-wrapper">
             <button onclick="openBoxStyleModal('headerBrandingCard')" class="box-style-btn" title="Edit Style"><i class="fa-solid fa-palette"></i></button>
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 bg-gradient-to-tr from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-amber-500/30">
-                    <i class="fa-solid fa-book-open text-lg"></i>
-                </div>
-                <div>
-                    <h1 id="editableAppTitle" contenteditable="true" onblur="saveCustomAppTitle()" class="text-base font-extrabold text-gray-900 tracking-tight outline-none">ATHAR</h1>
-                    <div class="flex items-center gap-2 text-[11px] text-gray-500 font-medium">
-                        <span id="liveClockDisplay">--:--:--</span>
-                        <span>•</span>
-                        <span id="liveDateDisplay">-- -- ----</span>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 bg-gradient-to-tr from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-amber-500/30">
+                        <i class="fa-solid fa-book-open text-lg"></i>
                     </div>
+                    <div>
+                        <h1 id="editableAppTitle" contenteditable="true" onblur="saveCustomAppTitle()" class="text-base font-extrabold text-gray-900 tracking-tight outline-none">ATHAR</h1>
+                        <div class="flex items-center gap-2 text-[11px] text-gray-500 font-medium">
+                            <span id="liveClockDisplay">--:--:--</span>
+                            <span>•</span>
+                            <span id="liveDateDisplay">-- -- ----</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1.5 mr-6">
+                    <button onclick="toggleCalculator()" class="w-9 h-9 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center transition shadow-sm"><i class="fa-solid fa-calculator"></i></button>
+                    <button onclick="openSettings()" class="w-9 h-9 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl flex items-center justify-center transition shadow-sm"><i class="fa-solid fa-sliders"></i></button>
                 </div>
             </div>
         </div>
@@ -69,7 +75,6 @@
                 <button onclick="setEntryType('expense')" id="btnTypeExpense" class="flex-1 py-1.5 rounded-lg text-gray-600 transition">Kharcha (-)</button>
             </div>
 
-            <!-- Photo Upload -->
             <div class="grid grid-cols-2 gap-2 mb-3">
                 <label class="flex items-center justify-center gap-2 py-2.5 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-xs font-semibold cursor-pointer border border-indigo-200 transition">
                     <i class="fa-solid fa-camera"></i>
@@ -83,19 +88,16 @@
                 </label>
             </div>
 
-            <!-- Thumbnail Preview -->
             <div id="imagePreviewContainer" class="hidden relative mb-3 inline-block">
                 <img id="uploadedImagePreview" class="w-20 h-20 object-cover rounded-2xl border-2 border-indigo-500 shadow-md">
                 <button onclick="removeUploadedImage()" class="absolute -top-2 -right-2 w-6 h-6 bg-rose-600 text-white rounded-full flex items-center justify-center text-xs shadow-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <!-- Note Input -->
             <div class="mb-3">
                 <label class="block text-[11px] font-bold text-gray-500 mb-1">Vivaran Likhein (Uda. 20 diva ya 15 lais):</label>
                 <textarea id="noteInput" oninput="calculateLiveTotal()" rows="2" placeholder="Yahan saman ya sankhya likhein..." class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium text-gray-800 focus:outline-none focus:border-indigo-500 transition resize-none"></textarea>
             </div>
 
-            <!-- Live Calculation Banner -->
             <div class="flex items-center justify-between bg-indigo-50/70 border border-indigo-100 px-3.5 py-2.5 rounded-xl mb-3">
                 <span class="text-[11px] font-bold text-indigo-900">Live Calculation:</span>
                 <span id="liveCalcResultText" class="text-xs font-extrabold text-indigo-700">₹0</span>
@@ -114,9 +116,12 @@
                     <span class="w-8 h-8 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-sm"><i class="fa-solid fa-clock-rotate-left"></i></span>
                     <h3 class="text-sm font-bold text-gray-800">Purani Pravisti (History Feed)</h3>
                 </div>
+                <div class="flex items-center gap-1">
+                    <button onclick="downloadPDF()" class="p-2 text-indigo-600 hover:text-indigo-800 text-xs transition" title="Download PDF"><i class="fa-solid fa-file-pdf text-sm"></i></button>
+                    <button onclick="clearAllHistory()" class="p-2 text-rose-500 hover:text-rose-700 text-xs transition" title="Clear History"><i class="fa-solid fa-trash-can text-sm"></i></button>
+                </div>
             </div>
             
-            <!-- Filter Tabs -->
             <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-semibold text-center mb-3">
                 <button onclick="setHistoryFilter('all')" id="filterTabAll" class="flex-1 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition">Sabhi</button>
                 <button onclick="setHistoryFilter('income')" id="filterTabIncome" class="flex-1 py-1.5 rounded-lg text-gray-600 transition">Kamai</button>
@@ -128,7 +133,68 @@
 
     </div>
 
-    <!-- PHOTO ZOOM / LIGHTBOX MODAL -->
+    <!-- FLOATING CALCULATOR MODAL -->
+    <div id="floatingCalculator" class="hidden fixed top-20 right-4 w-72 bg-white/95 backdrop-blur-xl border border-gray-200 shadow-2xl rounded-3xl overflow-hidden z-40">
+        <div id="calcDragHeader" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-2 flex items-center justify-between cursor-move">
+            <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-calculator"></i> Calculator</span>
+            <button onclick="toggleCalculator()" class="text-white hover:text-gray-200 text-sm p-1"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="p-3 bg-gray-50 border-b border-gray-100 text-right">
+            <div id="calcDisplay" class="text-2xl font-black text-gray-800 tracking-wider truncate">0</div>
+            <div id="calcAutoResult" class="text-[11px] font-bold text-indigo-600 mt-0.5"></div>
+        </div>
+        <div class="p-3 grid grid-cols-4 gap-1.5">
+            <button onclick="appendCalc('C')" class="p-2.5 bg-rose-50 text-rose-600 rounded-xl text-xs font-bold hover:bg-rose-100">C</button>
+            <button onclick="backspaceCalc()" class="p-2.5 bg-amber-50 text-amber-600 rounded-xl text-xs font-bold hover:bg-amber-100"><i class="fa-solid fa-delete-left"></i></button>
+            <button onclick="appendCalc('(')" class="p-2.5 bg-gray-100 text-gray-700 rounded-xl text-xs font-bold hover:bg-gray-200">(</button>
+            <button onclick="appendCalc('/')" class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl text-xs font-bold hover:bg-indigo-100">÷</button>
+            
+            <button onclick="appendCalc('7')" class="p-2.5 bg-gray-100 text-gray-800 rounded-xl text-xs font-bold hover:bg-gray-200">7</button>
+            <button onclick="appendCalc('8')" class="p-2.5 bg-gray-100 text-gray-800 rounded-xl text-xs font-bold hover:bg-gray-200">8</button>
+            <button onclick="appendCalc('9')" class="p-2.5 bg-gray-100 text-gray-800 rounded-xl text-xs font-bold hover:bg-gray-200">9</button>
+            <button onclick="appendCalc('*')" class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl text-xs font-bold hover:bg-indigo-100">×</button>
+            
+            <button onclick="appendCalc('4')" class="p-2.5 bg-gray-100 text-gray-800 rounded-xl text-xs font-bold hover:bg-gray-200">4</button>
+            <button onclick="appendCalc('5')" class="p-2.5 bg-gray-100 text-gray-800 rounded-xl text-xs font-bold hover:bg-gray-200">5</button>
+            <button onclick="appendCalc('6')" class="p-2.5 bg-gray-100 text-gray-800 rounded-xl text-xs font-bold hover:bg-gray-200">6</button>
+            <button onclick="appendCalc('-')" class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl text-xs font-bold hover:bg-indigo-100">-</button>
+            
+            <button onclick="appendCalc('1')" class="p-2.5 bg-gray-100 text-gray-800 rounded-xl text-xs font-bold hover:bg-gray-200">1</button>
+            <button onclick="appendCalc('2')" class="p-2.5 bg-gray-100 text-gray-800 rounded-xl text-xs font-bold hover:bg-gray-200">2</button>
+            <button onclick="appendCalc('3')" class="p-2.5 bg-gray-100 text-gray-800 rounded-xl text-xs font-bold hover:bg-gray-200">3</button>
+            <button onclick="appendCalc('+')" class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl text-xs font-bold hover:bg-indigo-100">+</button>
+            
+            <button onclick="appendCalc('0')" class="col-span-2 p-2.5 bg-gray-100 text-gray-800 rounded-xl text-xs font-bold hover:bg-gray-200">0</button>
+            <button onclick="appendCalc('.')" class="p-2.5 bg-gray-100 text-gray-800 rounded-xl text-xs font-bold hover:bg-gray-200">.</button>
+            <button onclick="calculateResult()" class="p-2.5 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700">=</button>
+        </div>
+    </div>
+
+    <!-- GLOBAL SETTINGS MODAL -->
+    <div id="settingsModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+                <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2"><i class="fa-solid fa-sliders text-indigo-600"></i> App Settings & Rates</h3>
+                <button onclick="closeSettings()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-gray-500 mb-1">Theme Chun:</label>
+                <select id="bgThemeSelect" onchange="changeScreenTheme()" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold">
+                    <option value="dark">Deep Night Sky</option>
+                    <option value="sunset">Sunset Glow</option>
+                    <option value="light">Clean Modern Light</option>
+                    <option value="emerald">Emerald Forest</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-gray-500 mb-1">Custom Rates (15 Items):</label>
+                <div id="rateSlotsContainer" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+            </div>
+            <button onclick="saveSettingsData()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-500/30">Sabhi Settings Save Karein</button>
+        </div>
+    </div>
+
+    <!-- PHOTO ZOOM MODAL -->
     <div id="photoZoomModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4" onclick="closePhotoZoom()">
         <div class="relative max-w-2xl max-h-[90vh]" onclick="event.stopPropagation()">
             <button onclick="closePhotoZoom()" class="absolute -top-10 right-0 text-white hover:text-gray-300 text-2xl font-bold p-2"><i class="fa-solid fa-xmark"></i></button>
@@ -141,7 +207,6 @@
     let currentHistoryFilter = 'all';
     let uploadedPhotoBase64 = null;
     
-    // 15 Custom Rates
     let customRates = JSON.parse(localStorage.getItem('athar_custom_rates')) || [
         { name: "diva", rate: 50 },
         { name: "lais", rate: 30 },
@@ -266,14 +331,20 @@
         document.getElementById('noteInput').value = '';
         removeUploadedImage();
         renderHistoryFeed();
-        updateDashboardTotals();
     }
 
     function deleteSingleEntry(id) {
         savedEntries = savedEntries.filter(e => e.id !== id);
         localStorage.setItem('athar_notebook_entries', JSON.stringify(savedEntries));
         renderHistoryFeed();
-        updateDashboardTotals();
+    }
+
+    function clearAllHistory() {
+        if(confirm("Kya aap saari history delete karna chahte hain?")) {
+            savedEntries = [];
+            localStorage.removeItem('athar_notebook_entries');
+            renderHistoryFeed();
+        }
     }
 
     function renderHistoryFeed() {
@@ -319,8 +390,83 @@
         });
     }
 
-    function updateDashboardTotals() {
-        // Dashboard sums placeholder if needed
+    // Calculator Functions
+    function toggleCalculator() {
+        let calc = document.getElementById('floatingCalculator');
+        calc.classList.toggle('hidden');
+    }
+
+    function appendCalc(val) {
+        let display = document.getElementById('calcDisplay');
+        if(val === 'C') {
+            display.innerText = '0';
+            document.getElementById('calcAutoResult').innerText = '';
+            return;
+        }
+        if(display.innerText === '0') display.innerText = val;
+        else display.innerText += val;
+    }
+
+    function backspaceCalc() {
+        let display = document.getElementById('calcDisplay');
+        if(display.innerText.length > 1) display.innerText = display.innerText.slice(0, -1);
+        else display.innerText = '0';
+    }
+
+    function calculateResult() {
+        let display = document.getElementById('calcDisplay');
+        try {
+            let res = eval(display.innerText);
+            document.getElementById('calcAutoResult').innerText = `= ${res}`;
+            display.innerText = res;
+        } catch(e) {
+            display.innerText = 'Error';
+        }
+    }
+
+    // Settings & Rates Functions
+    function openSettings() {
+        document.getElementById('settingsModal').classList.remove('hidden');
+        let container = document.getElementById('rateSlotsContainer');
+        container.innerHTML = '';
+        customRates.forEach((r, idx) => {
+            let div = document.createElement('div');
+            div.className = "flex items-center gap-2";
+            div.innerHTML = `
+                <input type="text" value="${r.name}" onchange="updateRateName(${idx}, this.value)" class="flex-1 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium">
+                <input type="number" value="${r.rate}" onchange="updateRateValue(${idx}, this.value)" class="w-20 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium text-right">
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function closeSettings() {
+        document.getElementById('settingsModal').classList.add('hidden');
+    }
+
+    function updateRateName(idx, val) {
+        customRates[idx].name = val.toLowerCase().trim();
+        localStorage.setItem('athar_custom_rates', JSON.stringify(customRates));
+    }
+
+    function updateRateValue(idx, val) {
+        customRates[idx].rate = parseFloat(val) || 0;
+        localStorage.setItem('athar_custom_rates', JSON.stringify(customRates));
+    }
+
+    function saveSettingsData() {
+        closeSettings();
+        alert("Settings safaltapurvak save ho gayi hain!");
+    }
+
+    function changeScreenTheme() {
+        let theme = document.getElementById('bgThemeSelect').value;
+        let body = document.getElementById('appBody');
+        if(theme === 'sunset') body.className = "bg-gradient-to-br from-amber-900 via-orange-950 to-rose-950 min-h-screen p-2 sm:p-4 text-gray-800";
+        else if(theme === 'light') body.className = "bg-gradient-to-br from-slate-100 via-indigo-100 to-purple-100 min-h-screen p-2 sm:p-4 text-gray-800";
+        else if(theme === 'emerald') body.className = "bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-950 min-h-screen p-2 sm:p-4 text-gray-800";
+        else body.className = "bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 min-h-screen p-2 sm:p-4 text-gray-800";
+        localStorage.setItem('athar_screen_theme', theme);
     }
 
     // Zoom Modal Functions
@@ -343,12 +489,35 @@
         localStorage.setItem('athar_custom_app_title', titleText);
     }
 
+    function downloadPDF() {
+        let element = document.getElementById('historyFeedCard');
+        html2pdf().from(element).save('athar-notebook-history.pdf');
+    }
+
+    // Box Style Modal Placeholders
+    function openBoxStyleModal(boxId) {}
+
+    setInterval(() => {
+        let d = new Date();
+        let clockEl = document.getElementById('liveClockDisplay');
+        let dateEl = document.getElementById('liveDateDisplay');
+        if(clockEl) clockEl.innerText = d.toLocaleTimeString('hi-IN');
+        if(dateEl) dateEl.innerText = d.toLocaleDateString('hi-IN');
+    }, 1000);
+
     window.onload = function() {
         let loadedEntries = localStorage.getItem('athar_notebook_entries');
         if(loadedEntries) savedEntries = JSON.parse(loadedEntries);
         
         let loadedRates = localStorage.getItem('athar_custom_rates');
         if(loadedRates) customRates = JSON.parse(loadedRates);
+
+        let savedTheme = localStorage.getItem('athar_screen_theme');
+        if(savedTheme) {
+            let themeSel = document.getElementById('bgThemeSelect');
+            if(themeSel) themeSel.value = savedTheme;
+            changeScreenTheme();
+        }
 
         renderHistoryFeed();
     };
